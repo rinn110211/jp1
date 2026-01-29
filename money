@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>記帳助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #F8FAFC;
+            height: 100vh;
+            height: -webkit-fill-available;
+            overflow: hidden;
+        }
+
+        html {
+            height: -webkit-fill-available;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-content {
+            display: none;
+            animation: cardSlideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes cardSlideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .nav-btn.active {
+            color: #2563eb;
+            transform: scale(1.1) translateY(-6px);
+        }
+
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: #2563eb;
+            border-radius: 99px;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+
+        .nav-btn.active::after {
+            width: 14px;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .dynamic-card {
+            transition: all 0.2s ease;
+        }
+
+        .dynamic-card:active {
+            transform: scale(0.97);
+        }
+
+        .floating-nav {
+            bottom: 20px;
+            left: 16px;
+            right: 16px;
+            border-radius: 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .income-text { color: #059669; }
+        .expense-text { color: #334155; }
+        
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="max-w-md mx-auto flex flex-col bg-slate-50 border-x border-slate-100 shadow-2xl">
+
+    <!-- Header -->
+    <header class="glass-effect sticky top-0 z-40 p-3 flex justify-between items-center px-6">
+        <div class="flex items-center gap-2">
+            <div class="bg-blue-600 p-1.5 rounded-xl text-white shadow-md shadow-blue-100">
+                <i data-lucide="japanese-yen" size="18" stroke-width="3"></i>
+            </div>
+        </div>
+        <button onclick="toggleSettings(true)" class="p-2 text-slate-400 bg-white rounded-xl border border-slate-100 shadow-sm active:scale-90 transition-all">
+            <i data-lucide="settings" size="20"></i>
+        </button>
+    </header>
+
+    <!-- 主內容區 -->
+    <main id="scroll-area" class="flex-1 overflow-y-auto scrollbar-hide px-4 pt-3 pb-44">
+        
+        <!-- Dashboard Tab -->
+        <section id="tab-dashboard" class="tab-content active space-y-4">
+            <div class="flex justify-between items-center px-1">
+                <h2 class="text-lg font-black text-slate-800 tracking-tight">資產概覽</h2>
+                <div class="bg-white border border-slate-100 px-2 py-1 rounded-xl shadow-sm">
+                    <input type="month" id="dash-month-input" onchange="changeDashboardMonth(this.value)" class="text-[10px] font-bold text-blue-600 border-none bg-transparent outline-none cursor-pointer">
+                </div>
+            </div>
+
+            <!-- 資產餘額卡片 -->
+            <div class="bg-white rounded-[2rem] p-6 border border-blue-50 shadow-[0_12px_35px_rgba(37,99,235,0.06)] relative overflow-hidden group dynamic-card">
+                <div class="absolute -top-6 -right-6 p-4 text-blue-100 opacity-20 rotate-12 transition-transform duration-1000">
+                    <i data-lucide="wallet" size="120"></i>
+                </div>
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest relative z-10 opacity-70">總剩餘資產 (含初期扣除)</p>
+                <h2 id="dash-total-assets" class="text-3xl font-black mt-1 text-slate-800 tracking-tighter relative z-10">¥0</h2>
+                <div class="mt-4 flex justify-between items-center relative z-10">
+                    <span id="dash-total-twd" class="font-black text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl text-xs">≈ NT$ 0</span>
+                    <span id="dash-rate" class="text-[9px] font-bold text-slate-300">1 JPY = 0.215 TWD</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 shadow-sm text-center dynamic-card">
+                    <p class="text-[9px] text-emerald-600 font-black uppercase mb-0.5">該月收入</p>
+                    <p id="dash-month-income" class="font-black text-base text-emerald-700">¥0</p>
+                </div>
+                <div class="bg-slate-100 p-4 rounded-2xl border border-slate-200 shadow-sm text-center dynamic-card">
+                    <p class="text-[9px] text-slate-500 font-black uppercase mb-0.5">該月支出</p>
+                    <p id="dash-month-expense" class="font-black text-base text-slate-800">¥0</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">支出類別分布</h3>
+                <div class="relative h-48 w-full flex justify-center">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+                <div id="chart-legend-empty" class="hidden text-center py-4 text-slate-300 text-[10px] font-bold italic">該月份目前無支出數據</div>
+            </div>
+        </section>
+
+        <!-- Add Tab -->
+        <section id="tab-add" class="tab-content space-y-5">
+            <div class="flex justify-between items-center px-1">
+                <h2 class="text-xl font-black text-slate-800">新增紀錄</h2>
+                <div class="bg-slate-200/50 p-1 rounded-xl flex gap-1 shadow-inner">
+                    <button onclick="setInputCurrency('JPY')" id="btn-jpy" class="px-3 py-1.5 rounded-lg text-[9px] font-black transition-all bg-white text-blue-600 shadow-sm">JPY</button>
+                    <button onclick="setInputCurrency('TWD')" id="btn-twd" class="px-3 py-1.5 rounded-lg text-[9px] font-black transition-all text-slate-500">TWD</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 bg-slate-200/50 p-1 rounded-[18px] shadow-inner">
+                <button onclick="setInputType('expense')" id="btn-type-expense" class="py-2.5 rounded-2xl text-[11px] font-black transition-all bg-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5">
+                    <i data-lucide="arrow-down-right" size="14"></i> 支出
+                </button>
+                <button onclick="setInputType('income')" id="btn-type-income" class="py-2.5 rounded-2xl text-[11px] font-black transition-all text-slate-500 flex items-center justify-center gap-1.5">
+                    <i data-lucide="arrow-up-right" size="14"></i> 收入
+                </button>
+            </div>
+
+            <form onsubmit="saveTransaction(event)" class="space-y-4">
+                <div class="bg-white p-5 rounded-2xl shadow-lg border border-blue-50 relative overflow-hidden">
+                    <div id="input-bg-accent" class="absolute top-0 right-0 w-16 h-16 bg-slate-100 rounded-full -mr-8 -mt-8 transition-all duration-700"></div>
+                    <label id="input-label" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest relative z-10">金額紀錄</label>
+                    <div class="flex items-center mt-1 border-b border-slate-100 pb-1 focus-within:border-blue-500 relative z-10 transition-colors">
+                        <span id="currency-symbol" class="text-xl font-black text-slate-300">¥</span>
+                        <input type="number" step="any" id="input-amount" class="w-full bg-transparent border-none text-3xl font-black focus:ring-0 ml-1 text-slate-800 outline-none" placeholder="0">
+                    </div>
+                    <p id="conversion-hint" class="mt-2 text-[10px] font-bold text-blue-400 hidden flex items-center gap-1 relative z-10"></p>
+                </div>
+
+                <div class="flex gap-2">
+                    <div class="flex-1 bg-white p-0.5 rounded-xl border border-slate-100 shadow-sm">
+                        <input type="date" id="input-date" class="w-full bg-transparent p-2.5 text-[10px] font-black outline-none text-slate-600">
+                    </div>
+                    <div class="flex-[1.5] bg-white p-0.5 rounded-xl border border-slate-100 shadow-sm">
+                        <input type="text" id="input-note" placeholder="寫點備註..." class="w-full bg-transparent p-2.5 text-[10px] font-black outline-none text-slate-600">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">分類</p>
+                    <div class="grid grid-cols-4 gap-2" id="add-category-grid"></div>
+                </div>
+
+                <div class="space-y-2">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">支付管道</p>
+                    <div class="grid grid-cols-3 gap-2" id="add-payment-grid"></div>
+                </div>
+
+                <button type="submit" id="save-btn" class="w-full bg-slate-900 text-white font-black py-4 rounded-xl shadow-xl transition-all flex items-center justify-center gap-2 active:scale-95 text-sm">
+                    <i data-lucide="check" size="18"></i> 確認存入帳本
+                </button>
+            </form>
+        </section>
+
+        <!-- History Tab -->
+        <section id="tab-history" class="tab-content space-y-4">
+            <div class="flex justify-between items-center px-1">
+                <h2 class="text-xl font-black text-slate-800">歷史明細</h2>
+                <div class="flex bg-slate-200/50 p-1 rounded-xl shadow-inner" id="history-filter">
+                    <button onclick="setFilter('day')" id="filter-day" class="px-3 py-1 rounded-lg text-[9px] font-black uppercase transition-all text-slate-500">本日</button>
+                    <button onclick="setFilter('month')" id="filter-month" class="px-3 py-1 rounded-lg text-[9px] font-black uppercase transition-all bg-white text-blue-600 shadow-sm">本月</button>
+                    <button onclick="setFilter('all')" id="filter-all" class="px-3 py-1 rounded-lg text-[9px] font-black uppercase transition-all text-slate-500">全部</button>
+                </div>
+            </div>
+
+            <div class="glass-effect p-3 px-4 rounded-2xl flex items-center justify-between shadow-sm">
+                <span id="date-selector-label" class="text-[10px] font-black text-slate-400 uppercase">篩選範圍</span>
+                <div id="date-input-wrapper" class="font-bold text-blue-600 text-xs"></div>
+            </div>
+
+            <div class="bg-white p-5 rounded-[1.8rem] border border-slate-100 shadow-sm space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-[9px] font-bold text-slate-400 uppercase">區間收入合計</span>
+                    <span id="history-period-income" class="text-emerald-600 font-black text-xs">¥0</span>
+                </div>
+                <div class="flex justify-between items-center border-t border-slate-50 pt-2">
+                    <span class="text-[9px] font-bold text-slate-400 uppercase">區間支出合計</span>
+                    <span id="history-period-expense" class="text-slate-700 font-black text-xs">¥0</span>
+                </div>
+                <div class="flex justify-between items-center border-t-2 border-blue-50 pt-2 mt-1">
+                    <span class="text-[10px] font-black text-slate-800 uppercase">區間總損益</span>
+                    <span id="history-period-balance" class="text-blue-600 font-black text-base">¥0</span>
+                </div>
+            </div>
+
+            <div id="history-list" class="space-y-3 pb-20"></div>
+        </section>
+
+        <!-- Initial Costs Tab -->
+        <section id="tab-initial" class="tab-content space-y-4">
+            <!-- 初期費用統計 (緊湊化) -->
+            <div class="bg-white rounded-[1.8rem] p-5 border border-blue-50 shadow-sm relative overflow-hidden dynamic-card">
+                <div class="absolute -top-4 -right-4 p-4 text-blue-50 opacity-30 rotate-12"><i data-lucide="plane" size="80"></i></div>
+                <div class="flex justify-between items-center mb-1">
+                    <div>
+                        <p class="text-slate-400 text-[9px] font-bold uppercase tracking-widest relative z-10">實際總開銷</p>
+                        <h2 id="init-total-display" class="text-2xl font-black text-slate-800 relative z-10">¥0</h2>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-slate-400 text-[9px] font-bold uppercase tracking-widest relative z-10">剩餘預算</p>
+                        <h2 id="init-rem-display" class="text-xl font-black text-blue-600 relative z-10">¥0</h2>
+                    </div>
+                </div>
+                
+                <div class="mt-3 relative h-1 bg-slate-100 rounded-full overflow-hidden z-10">
+                    <div id="init-progress-bar" class="h-full bg-blue-600 transition-all duration-1000 rounded-full" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between mt-1.5 text-[9px] font-black uppercase text-slate-400 relative z-10">
+                    <span>預算進度</span>
+                    <span id="init-progress-text" class="text-blue-600 font-bold">0%</span>
+                </div>
+            </div>
+
+            <!-- 預算上限編輯小卡片 -->
+            <div class="bg-white p-3.5 rounded-2xl border border-blue-100 shadow-sm flex items-center justify-between">
+                <div>
+                    <h4 class="text-[9px] font-black text-blue-500 uppercase tracking-widest">初期預算上限設定</h4>
+                    <div class="flex items-center gap-1 mt-0.5">
+                        <span class="text-xs font-black text-slate-700">¥</span>
+                        <input type="number" id="init-budget-input" oninput="updateInitialBudget(this.value)" class="w-16 bg-slate-50 border-none rounded-lg p-1 text-xs font-black text-blue-600 outline-none" placeholder="0">
+                        <span class="text-[10px] font-bold text-slate-400">萬</span>
+                    </div>
+                </div>
+                <div class="bg-blue-50 p-1.5 rounded-lg text-blue-600">
+                    <i data-lucide="target" size="16"></i>
+                </div>
+            </div>
+
+            <!-- 大型支出表單 -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-md space-y-3">
+                <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">新增初期開支</h3>
+                <form onsubmit="saveInitialCost(event)" class="space-y-2">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="init-input-name" placeholder="項目" class="w-full bg-slate-50 border-none rounded-lg p-2.5 text-[11px] font-black outline-none focus:ring-1 focus:ring-blue-100 transition-all">
+                        <input type="text" id="init-input-note" placeholder="詳細備註" class="w-full bg-slate-50 border-none rounded-lg p-2.5 text-[11px] font-black outline-none focus:ring-1 focus:ring-blue-100 transition-all">
+                    </div>
+                    <div class="flex gap-2">
+                        <div class="flex-1 flex items-center bg-slate-50 rounded-lg px-2 border border-slate-100">
+                            <span class="text-[8px] font-bold text-slate-400 mr-1 shrink-0">預算</span>
+                            <input type="number" id="init-input-budget" placeholder="¥" class="w-full bg-transparent p-2 text-[11px] font-black outline-none">
+                        </div>
+                        <div class="flex-1 flex items-center bg-slate-50 rounded-lg px-2 border border-slate-100">
+                            <span class="text-[8px] font-bold text-slate-400 mr-1 shrink-0">實際</span>
+                            <input type="number" id="init-input-actual" placeholder="¥" class="w-full bg-transparent p-2 text-[11px] font-black outline-none">
+                        </div>
+                        <button type="submit" class="bg-slate-900 text-white px-4 rounded-lg font-black shadow-lg active:scale-90 transition-all">
+                            <i data-lucide="plus" size="16"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 彩色清單項目 -->
+            <div id="initial-costs-list" class="space-y-2 pb-20"></div>
+        </section>
+    </main>
+
+    <!-- 懸浮式靈動導覽列 -->
+    <nav class="floating-nav glass-effect fixed max-w-md mx-auto py-3 px-8 flex justify-between items-center z-40">
+        <button onclick="switchTab('add')" class="nav-btn flex flex-col items-center gap-1 text-slate-300" data-tab="add">
+            <i data-lucide="plus-circle" size="22"></i>
+            <span class="text-[8px] font-black tracking-widest uppercase">新增</span>
+        </button>
+        <button onclick="switchTab('history')" class="nav-btn flex flex-col items-center gap-1 text-slate-300" data-tab="history">
+            <i data-lucide="list" size="22"></i>
+            <span class="text-[8px] font-black tracking-widest uppercase">明細</span>
+        </button>
+        <button onclick="switchTab('dashboard')" class="nav-btn flex flex-col items-center gap-1 text-slate-300 active" data-tab="dashboard">
+            <i data-lucide="layout-dashboard" size="22"></i>
+            <span class="text-[8px] font-black tracking-widest uppercase">總覽</span>
+        </button>
+        <button onclick="switchTab('initial')" class="nav-btn flex flex-col items-center gap-1 text-slate-300" data-tab="initial">
+            <i data-lucide="calculator" size="22"></i>
+            <span class="text-[8px] font-black tracking-widest uppercase">初期</span>
+        </button>
+    </nav>
+
+    <!-- Settings Modal -->
+    <div id="modal-settings" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-6 modal-backdrop">
+        <div class="bg-white w-full max-w-sm rounded-[2.2rem] p-7 shadow-2xl relative animate-in zoom-in duration-300">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-black text-slate-800">自定義設定</h2>
+                <button onclick="toggleSettings(false)" class="p-2 bg-slate-50 rounded-full text-slate-400 hover:text-slate-600 transition-colors"><i data-lucide="x" size="18"></i></button>
+            </div>
+            
+            <div class="space-y-5 max-h-[60vh] overflow-y-auto scrollbar-hide pr-1">
+                <section>
+                    <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">匯率設定</h3>
+                    <div class="bg-blue-50 p-3.5 rounded-2xl flex justify-between items-center shadow-inner border border-blue-100">
+                        <span class="text-[10px] font-black text-blue-600">1 JPY =</span>
+                        <input type="number" step="0.001" id="set-rate" class="w-20 bg-white border-none rounded-xl p-2 text-right font-black text-blue-600 outline-none shadow-sm">
+                    </div>
+                </section>
+                <section>
+                    <div class="flex justify-between items-center mb-2 px-1">
+                        <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">支出分類</h3>
+                        <button onclick="addItem('cat')" class="text-[9px] font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">新增</button>
+                    </div>
+                    <div id="settings-cat-list" class="space-y-1.5"></div>
+                </section>
+                <section>
+                    <div class="flex justify-between items-center mb-2 px-1">
+                        <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">收入分類</h3>
+                        <button onclick="addItem('inc')" class="text-[9px] font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">新增</button>
+                    </div>
+                    <div id="settings-inc-list" class="space-y-1.5"></div>
+                </section>
+                <section>
+                    <div class="flex justify-between items-center mb-2 px-1">
+                        <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">支付帳戶</h3>
+                        <button onclick="addItem('pay')" class="text-[9px] font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">新增</button>
+                    </div>
+                    <div id="settings-pay-list" class="space-y-1.5"></div>
+                </section>
+                <button onclick="resetApp()" class="w-full text-red-400 text-[9px] font-black py-4 bg-red-50 rounded-2xl tracking-widest uppercase hover:bg-red-100 transition-colors mt-4">清除所有資料</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="modal-edit" class="fixed inset-0 bg-slate-900/60 z-[70] hidden flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-7 shadow-2xl animate-in zoom-in duration-200">
+            <div class="flex justify-between items-center mb-5">
+                <h3 id="edit-modal-title" class="text-base font-black text-slate-800 px-2">編輯</h3>
+                <button onclick="closeEditModal()" class="p-2 bg-slate-50 rounded-full text-slate-400"><i data-lucide="x" size="18"></i></button>
+            </div>
+            <div class="space-y-6">
+                <input id="edit-name" type="text" class="w-full bg-slate-50 border-none rounded-2xl p-4 font-black outline-none shadow-inner text-slate-700 text-sm" placeholder="輸入名稱">
+                <div id="edit-icon-grid" class="grid grid-cols-5 gap-2.5 max-h-40 overflow-y-auto bg-slate-50 rounded-[1.8rem] p-4 scrollbar-hide border border-slate-100"></div>
+                <button onclick="saveItemEdit()" class="w-full bg-slate-900 text-white font-black py-4 rounded-2xl shadow-xl active:scale-95 transition-all text-sm">確認儲存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ICON_OPTIONS = {
+            ShoppingBag: { icon: 'shopping-bag', color: '#10B981' },
+            Utensils: { icon: 'utensils', color: '#F59E0B' },
+            Train: { icon: 'train', color: '#3B82F6' },
+            Home: { icon: 'home', color: '#6366F1' },
+            BookOpen: { icon: 'book-open', color: '#8B5CF6' },
+            Coffee: { icon: 'coffee', color: '#A855F7' },
+            CreditCard: { icon: 'credit-card', color: '#4B5563' },
+            Plane: { icon: 'plane', color: '#0EA5E9' },
+            Coins: { icon: 'coins', color: '#EAB308' },
+            Wallet: { icon: 'wallet', color: '#D946EF' },
+            Smartphone: { icon: 'smartphone', color: '#2DD4BF' },
+            AlertCircle: { icon: 'alert-circle', color: '#EF4444' },
+            Ticket: { icon: 'ticket', color: '#FACC15' },
+            Shirt: { icon: 'shirt', color: '#06B6D4' },
+            Wifi: { icon: 'wifi', color: '#2563EB' },
+            Stethoscope: { icon: 'stethoscope', color: '#06B6D4' },
+            Heart: { icon: 'heart', color: '#F43F5E' },
+            Construction: { icon: 'construction', color: '#84CC16' }
+        };
+
+        const DEFAULTS = {
+            categories: [
+                { id: 'c1', name: '超市採買', icon: 'ShoppingBag' },
+                { id: 'c2', name: '外食餐廳', icon: 'Utensils' },
+                { id: 'c3', name: '交通費用', icon: 'Train' },
+                { id: 'c4', name: '房租水電', icon: 'Home' },
+                { id: 'c5', name: '學習書籍', icon: 'BookOpen' }
+            ],
+            incomeCategories: [
+                { id: 'i1', name: '獎學金', icon: 'BookOpen' },
+                { id: 'i2', name: '零用錢', icon: 'Wallet' },
+                { id: 'i3', name: '薪資收入', icon: 'Coins' }
+            ],
+            payments: [
+                { id: 'p1', name: '台幣帳戶', icon: 'Wallet' },
+                { id: 'p2', name: '日幣帳戶', icon: 'Home' },
+                { id: 'p3', name: '日幣現金', icon: 'Coins' },
+                { id: 'p4', name: 'PayPay', icon: 'Smartphone' },
+                { id: 'p5', name: 'Suica', icon: 'Ticket' },
+                { id: 'p6', name: '信用卡1', icon: 'CreditCard' },
+                { id: 'p7', name: '信用卡2', icon: 'CreditCard' },
+                { id: 'p8', name: '信用卡3', icon: 'CreditCard' }
+            ],
+            initialBudgetDefault: 0,
+            initialCostsDefault: [
+                { id: 'd1', name: '語言學校學費', budget: 800000, actual: 820000, note: '半年份學費含雜費' },
+                { id: 'd2', name: '租房首付', budget: 300000, actual: 285000, note: '押金、禮金、仲介費' },
+                { id: 'd3', name: '日本單程機票', budget: 15000, actual: 12500, note: '單程機票含托運' },
+                { id: 'd4', name: '家具家電組', budget: 100000, actual: 110000, note: '冰箱、洗衣機、微波爐' }
+            ]
+        };
+
+        let state = {
+            transactions: [],
+            initialCosts: [...DEFAULTS.initialCostsDefault],
+            initialBudget: 0,
+            exchangeRate: 0.215,
+            categories: [...DEFAULTS.categories],
+            incomeCategories: [...DEFAULTS.incomeCategories],
+            paymentMethods: [...DEFAULTS.payments],
+            activeTab: 'dashboard',
+            dashboardMonth: new Date().toISOString().slice(0, 7),
+            inputType: 'expense',
+            inputCurrency: 'JPY',
+            historyFilter: 'month',
+            historyDay: new Date().toISOString().split('T')[0],
+            historyMonth: new Date().toISOString().slice(0, 7),
+            historyYear: new Date().getFullYear().toString(),
+            selectedCategory: DEFAULTS.categories[0].id,
+            selectedIncomeCategory: DEFAULTS.incomeCategories[0].id,
+            selectedPayment: DEFAULTS.payments[0].id
+        };
+
+        let myChart = null;
+
+        function safeUpdate(id, text) {
+            const el = document.getElementById(id);
+            if (el) el.innerText = text;
+        }
+
+        function hexToRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        function saveData() { localStorage.setItem('jp_v17_data', JSON.stringify(state)); }
+        
+        function loadData() {
+            const saved = localStorage.getItem('jp_v17_data');
+            if (saved) {
+                try {
+                    state = { ...state, ...JSON.parse(saved) };
+                } catch(e) { console.error("Load failed", e); }
+            }
+        }
+
+        function renderAll() {
+            renderDashboard();
+            renderAddForm();
+            renderHistory();
+            renderInitialCosts();
+            lucide.createIcons();
+        }
+
+        function renderDashboard() {
+            const incomeTotal = state.transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+            const expenseDaily = state.transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+            // 修正：總資產應計算全期初期費用
+            const expenseInit = state.initialCosts.reduce((s, e) => s + e.actual, 0);
+            const totalAssets = incomeTotal - expenseDaily - expenseInit;
+
+            safeUpdate('dash-total-assets', `¥${totalAssets.toLocaleString()}`);
+            safeUpdate('dash-total-twd', `≈ NT$ ${Math.round(totalAssets * state.exchangeRate).toLocaleString()}`);
+            safeUpdate('dash-rate', `1 JPY = ${state.exchangeRate} TWD`);
+
+            const filtered = state.transactions.filter(t => t.date.startsWith(state.dashboardMonth));
+            const monthInc = filtered.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+            const monthExp = filtered.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+
+            safeUpdate('dash-month-income', `¥${monthInc.toLocaleString()}`);
+            safeUpdate('dash-month-expense', `¥${monthExp.toLocaleString()}`);
+        }
+
+        function updateChart() {
+            const ctx = document.getElementById('expenseChart');
+            if (!ctx) return;
+            const filtered = state.transactions.filter(t => t.type === 'expense' && t.date.startsWith(state.dashboardMonth));
+            const categoryData = state.categories.map(cat => {
+                const total = filtered.filter(e => e.category === cat.id).reduce((s, e) => s + e.amount, 0);
+                return { name: cat.name, total, color: ICON_OPTIONS[cat.icon].color };
+            }).filter(d => d.total > 0);
+
+            const legendEmpty = document.getElementById('chart-legend-empty');
+            if (legendEmpty) legendEmpty.classList.toggle('hidden', categoryData.length > 0);
+            if (myChart) myChart.destroy();
+            if (categoryData.length === 0) return;
+
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: categoryData.map(d => d.name),
+                    datasets: [{ data: categoryData.map(d => d.total), backgroundColor: categoryData.map(d => d.color), borderWidth: 4, borderColor: '#ffffff', hoverOffset: 12 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 6, padding: 15, font: { size: 9, weight: 'bold' } } } } }
+            });
+        }
+
+        function renderAddForm() {
+            const isExp = state.inputType === 'expense';
+            const list = isExp ? state.categories : state.incomeCategories;
+            const currentSel = isExp ? state.selectedCategory : state.selectedIncomeCategory;
+            
+            const catGrid = document.getElementById('add-category-grid');
+            if (catGrid) {
+                catGrid.innerHTML = list.map(cat => {
+                    const active = currentSel === cat.id;
+                    const config = ICON_OPTIONS[cat.icon];
+                    return `<button type="button" onclick="setSelection('cat', '${cat.id}')" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-all dynamic-card ${active ? 'border-blue-500 bg-blue-50' : 'border-slate-100 bg-white shadow-sm'}"><i data-lucide="${config.icon}" size="18" style="color: ${config.color}"></i><span class="text-[8px] font-black truncate w-full text-center text-slate-500">${cat.name}</span></button>`;
+                }).join('');
+            }
+
+            const payGrid = document.getElementById('add-payment-grid');
+            if (payGrid) {
+                payGrid.innerHTML = state.paymentMethods.map(pay => {
+                    const active = state.selectedPayment === pay.id;
+                    const config = ICON_OPTIONS[pay.icon];
+                    return `<button type="button" onclick="setSelection('pay', '${pay.id}')" class="flex items-center justify-center gap-1.5 p-2 rounded-lg border transition-all text-[9px] font-black dynamic-card ${active ? 'bg-slate-900 text-white border-slate-900 shadow-md' : 'bg-white text-slate-400 border-slate-100'}"><i data-lucide="${config.icon}" size="10" style="color: ${active ? '#fff' : config.color}"></i><span class="truncate">${pay.name}</span></button>`;
+                }).join('');
+            }
+            lucide.createIcons();
+        }
+
+        function renderHistory() {
+            const wrap = document.getElementById('date-input-wrapper');
+            if (!wrap) return;
+            if (state.historyFilter === 'day') wrap.innerHTML = `<input type="date" value="${state.historyDay}" onchange="changeHistoryDate('day', this.value)" class="bg-transparent outline-none">`;
+            else if (state.historyFilter === 'month') wrap.innerHTML = `<input type="month" value="${state.historyMonth}" onchange="changeHistoryDate('month', this.value)" class="bg-transparent outline-none">`;
+            else wrap.innerHTML = `<select onchange="changeHistoryDate('year', this.value)" class="bg-transparent outline-none"><option value="2025">2025 年</option><option value="2026">2026 年</option></select>`;
+
+            const filtered = state.transactions.filter(e => {
+                if (state.historyFilter === 'day') return e.date === state.historyDay;
+                if (state.historyFilter === 'month') return e.date.startsWith(state.historyMonth);
+                return e.date.startsWith(state.historyYear);
+            });
+
+            const inc = filtered.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+            const exp = filtered.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+            safeUpdate('history-period-income', `¥${inc.toLocaleString()}`);
+            safeUpdate('history-period-expense', `¥${exp.toLocaleString()}`);
+            safeUpdate('history-period-balance', `¥${(inc-exp).toLocaleString()}`);
+            
+            const list = document.getElementById('history-list');
+            if (list) {
+                list.innerHTML = filtered.map(t => {
+                    const catList = t.type === 'expense' ? state.categories : state.incomeCategories;
+                    const cat = catList.find(c => c.id === t.category);
+                    const pay = state.paymentMethods.find(p => p.id === t.payment);
+                    const config = ICON_OPTIONS[cat?.icon || 'ShoppingBag'];
+                    return `<div class="p-3.5 px-5 rounded-[1.8rem] flex items-center justify-between shadow-sm dynamic-card border border-white" style="background-color: ${hexToRgba(config.color, 0.06)}; border-left: 5px solid ${config.color}">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-white/80 p-2 rounded-xl"><i data-lucide="${config.icon}" size="16" style="color: ${config.color}"></i></div>
+                            <div><h4 class="font-black text-slate-800 text-xs">${t.note || cat?.name}</h4><p class="text-[8px] text-slate-400 font-bold uppercase tracking-tighter">${pay?.name || '帳戶'} • ${t.date}</p></div>
+                        </div>
+                        <div class="flex items-center gap-3 text-right">
+                            <div><p class="font-black ${t.type === 'income' ? 'income-text' : 'expense-text'} text-sm">${t.type === 'income' ? '+' : '-'}¥${t.amount.toLocaleString()}</p><p class="text-[8px] text-slate-400 font-bold">NT$ ${t.twd}</p></div>
+                            <button onclick="deleteRecord('${t.id}')" class="text-slate-300 p-1"><i data-lucide="trash-2" size="14"></i></button>
+                        </div>
+                    </div>`;
+                }).join('') || '<p class="text-center py-10 text-slate-300 text-xs font-black uppercase">暫無紀錄</p>';
+            }
+            lucide.createIcons();
+        }
+
+        function renderInitialCosts() {
+            const totalActual = state.initialCosts.reduce((s, e) => s + e.actual, 0);
+            const budget = state.initialBudget || 0;
+            const remaining = budget - totalActual;
+            const progress = budget > 0 ? Math.min((totalActual / budget) * 100, 100) : 0;
+            
+            safeUpdate('init-total-display', `¥${totalActual.toLocaleString()}`);
+            safeUpdate('init-rem-display', `¥${remaining.toLocaleString()}`);
+            safeUpdate('init-total-twd', `≈ NT$ ${Math.round(totalActual * state.exchangeRate).toLocaleString()}`);
+            
+            const bInput = document.getElementById('init-budget-input');
+            if(bInput) bInput.value = budget / 10000;
+
+            const bar = document.getElementById('init-progress-bar');
+            if (bar) bar.style.width = `${progress}%`;
+            safeUpdate('init-progress-text', `${progress.toFixed(1)}%`);
+            
+            const list = document.getElementById('initial-costs-list');
+            if (list) {
+                list.innerHTML = state.initialCosts.map(item => {
+                    const isOver = item.actual > item.budget;
+                    const statusColor = isOver ? "#ef4444" : "#3b82f6";
+                    const bg = hexToRgba(statusColor, 0.04);
+
+                    return `
+                    <div class="p-2.5 px-4 rounded-2xl border border-white shadow-sm dynamic-card flex flex-col gap-1" style="background-color: ${bg}; border-left: 4px solid ${statusColor}">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1 overflow-hidden">
+                                <span class="font-black text-xs text-slate-800 leading-none truncate block">${item.name}</span>
+                                <p class="text-[9px] text-slate-400 font-bold leading-tight truncate">${item.note || '無詳細內容'}</p>
+                            </div>
+                            <button onclick="deleteInitial('${item.id}')" class="text-slate-200 hover:text-red-400 ml-2"><i data-lucide="trash-2" size="12"></i></button>
+                        </div>
+                        <div class="flex justify-between items-center mt-0.5">
+                            <div class="text-[8px] font-black uppercase text-slate-400 opacity-60">
+                                預算 ¥${item.budget.toLocaleString()}
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[8px] font-bold text-slate-400 mr-0.5">實際</span>
+                                <span class="font-black text-slate-700 text-xs">¥${item.actual.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+            lucide.createIcons();
+        }
+
+        function updateInitialBudget(val) {
+            const parsed = parseFloat(val);
+            if (!isNaN(parsed)) {
+                state.initialBudget = parsed * 10000;
+                saveData();
+                renderInitialCosts();
+                renderDashboard();
+            }
+        }
+
+        function switchTab(tabId) {
+            state.activeTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            const content = document.getElementById(`tab-${tabId}`);
+            if (content) content.classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId));
+            const scrollArea = document.getElementById('scroll-area');
+            if (scrollArea) scrollArea.scrollTop = 0;
+            renderAll();
+            if (tabId === 'dashboard') setTimeout(updateChart, 100);
+        }
+
+        function setInputType(type) {
+            state.inputType = type;
+            const isExp = type === 'expense';
+            const bExp = document.getElementById('btn-type-expense');
+            const bInc = document.getElementById('btn-type-income');
+            if(bExp) bExp.className = isExp ? 'py-2.5 rounded-2xl text-[11px] font-black transition-all bg-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5' : 'py-2.5 rounded-2xl text-[11px] font-black transition-all text-slate-500 flex items-center justify-center gap-1.5';
+            if(bInc) bInc.className = !isExp ? 'py-2.5 rounded-2xl text-[11px] font-black transition-all bg-white text-emerald-600 shadow-sm flex items-center justify-center gap-1.5' : 'py-2.5 rounded-2xl text-[11px] font-black transition-all text-slate-500 flex items-center justify-center gap-1.5';
+            const bgAcc = document.getElementById('input-bg-accent');
+            if(bgAcc) bgAcc.className = `absolute top-0 right-0 w-16 h-16 ${isExp ? 'bg-slate-100' : 'bg-emerald-50'} rounded-full -mr-8 -mt-8 transition-all duration-700`;
+            renderAddForm();
+        }
+
+        function setInputCurrency(c) {
+            state.inputCurrency = c;
+            const bj = document.getElementById('btn-jpy');
+            const bt = document.getElementById('btn-twd');
+            if(bj) bj.className = `currency-btn px-3 py-1.5 rounded-lg text-[9px] font-black transition-all ${c === 'JPY' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`;
+            if(bt) bt.className = `currency-btn px-3 py-1.5 rounded-lg text-[9px] font-black transition-all ${c === 'TWD' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`;
+            safeUpdate('input-label', `金額紀錄 (${c})`);
+            safeUpdate('currency-symbol', c === 'JPY' ? '¥' : '$');
+            renderConversionHint();
+        }
+
+        function renderConversionHint() {
+            const val = parseFloat(document.getElementById('input-amount')?.value || 0);
+            const hintEl = document.getElementById('conversion-hint');
+            if (!hintEl) return;
+            if (val > 0) {
+                const target = state.inputCurrency === 'JPY' ? `NT$ ${Math.round(val * state.exchangeRate)}` : `¥ ${Math.round(val / state.exchangeRate)}`;
+                hintEl.innerHTML = `<i data-lucide="alert-circle" size="10"></i> 約 ${target}`;
+                hintEl.classList.remove('hidden');
+                lucide.createIcons();
+            } else hintEl.classList.add('hidden');
+        }
+
+        function changeDashboardMonth(val) { state.dashboardMonth = val; saveData(); renderDashboard(); updateChart(); }
+        function changeHistoryDate(type, val) { if (type === 'day') state.historyDay = val; if (type === 'month') state.historyMonth = val; if (type === 'year') state.historyYear = val; saveData(); renderHistory(); }
+        function setFilter(f) { state.historyFilter = f; document.querySelectorAll('#history-filter button').forEach(b => b.className = `px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${b.id.includes(f) ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`); renderHistory(); }
+        function setSelection(type, id) { if (type === 'cat') { if (state.inputType === 'expense') state.selectedCategory = id; else state.selectedIncomeCategory = id; } else state.selectedPayment = id; renderAddForm(); }
+
+        function saveTransaction(event) {
+            event.preventDefault();
+            const amt = parseFloat(document.getElementById('input-amount')?.value || 0);
+            if (amt <= 0) return;
+            const jpy = state.inputCurrency === 'JPY' ? amt : amt / state.exchangeRate;
+            const twd = state.inputCurrency === 'TWD' ? amt : amt * state.exchangeRate;
+            const cat = state.inputType === 'expense' ? state.selectedCategory : state.selectedIncomeCategory;
+            state.transactions.unshift({ id: Date.now().toString(), type: state.inputType, amount: Math.round(jpy), twd: parseFloat(twd.toFixed(1)), category: cat, payment: state.selectedPayment, date: document.getElementById('input-date').value, note: document.getElementById('input-note').value });
+            saveData();
+            const btn = document.getElementById('save-btn');
+            if(btn) {
+                const oldText = btn.innerHTML;
+                btn.classList.add('bg-emerald-600');
+                btn.innerText = '儲存成功！';
+                setTimeout(() => { switchTab('history'); btn.classList.remove('bg-emerald-600'); btn.innerHTML = oldText; document.getElementById('input-amount').value = ''; document.getElementById('input-note').value = ''; lucide.createIcons(); }, 600);
+            }
+        }
+
+        function deleteRecord(id) { if (confirm('刪除交易？')) { state.transactions = state.transactions.filter(t => t.id !== id); saveData(); renderAll(); updateChart(); } }
+
+        function saveInitialCost(e) {
+            e.preventDefault();
+            const n = document.getElementById('init-input-name').value;
+            const b = parseFloat(document.getElementById('init-input-budget').value) || 0;
+            const a = parseFloat(document.getElementById('init-input-actual').value) || 0;
+            const note = document.getElementById('init-input-note').value;
+            if (!n) return;
+            state.initialCosts.unshift({ id: Date.now().toString(), name: n, budget: b, actual: a, note: note });
+            saveData();
+            document.getElementById('init-input-name').value = '';
+            document.getElementById('init-input-budget').value = '';
+            document.getElementById('init-input-actual').value = '';
+            document.getElementById('init-input-note').value = '';
+            renderInitialCosts();
+            renderDashboard();
+        }
+
+        function deleteInitial(id) { if (confirm('移除項目？')) { state.initialCosts = state.initialCosts.filter(i => i.id !== id); saveData(); renderInitialCosts(); renderDashboard(); } }
+        function toggleSettings(show) { const el = document.getElementById('modal-settings'); if (el) el.classList.toggle('hidden', !show); if (show) renderSettings(); }
+
+        function renderSettings() {
+            const renderList = (id, list, type) => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = list.map(item => `<div class="bg-slate-50 p-2.5 px-4 rounded-xl flex justify-between items-center mb-1.5 shadow-inner border border-slate-100"><div class="flex items-center gap-2"><i data-lucide="${ICON_OPTIONS[item.icon].icon}" size="12" style="color: ${ICON_OPTIONS[item.icon].color}"></i><span class="text-[10px] font-black text-slate-700">${item.name}</span></div><div class="flex items-center gap-2"><button onclick="openEditModal('${type}', '${item.id}')"><i data-lucide="edit-3" size="12" class="text-slate-400"></i></button><button onclick="deleteItem('${type}', '${item.id}')"><i data-lucide="trash-2" size="12" class="text-slate-400"></i></button></div></div>`).join('');
+            };
+            renderList('settings-cat-list', state.categories, 'cat');
+            renderList('settings-inc-list', state.incomeCategories, 'inc');
+            renderList('settings-pay-list', state.paymentMethods, 'pay');
+            lucide.createIcons();
+        }
+
+        function openEditModal(type, id) {
+            const lists = { 'cat': state.categories, 'inc': state.incomeCategories, 'pay': state.paymentMethods };
+            const item = lists[type].find(i => i.id === id); if (!item) return;
+            state.editingItem = { type, id, tempIcon: item.icon };
+            const editName = document.getElementById('edit-name');
+            if (editName) editName.value = item.name;
+            const iconGrid = document.getElementById('edit-icon-grid');
+            if (iconGrid) iconGrid.innerHTML = Object.keys(ICON_OPTIONS).map(k => `<button type="button" onclick="setEditIcon('${k}')" class="p-2.5 rounded-xl transition-all ${state.editingItem.tempIcon===k?'bg-blue-50 ring-2 ring-blue-500':'opacity-50 grayscale hover:opacity-100'}"><i data-lucide="${ICON_OPTIONS[k].icon}" style="color: ${ICON_OPTIONS[k].color}" size="20"></i></button>`).join('');
+            const modal = document.getElementById('modal-edit');
+            if (modal) modal.classList.remove('hidden');
+            lucide.createIcons();
+        }
+        function setEditIcon(k) { state.editingItem.tempIcon = k; openEditModal(state.editingItem.type, state.editingItem.id); }
+        function saveItemEdit() {
+            const { type, id, tempIcon } = state.editingItem;
+            const editName = document.getElementById('edit-name');
+            const n = editName ? editName.value.trim() : ""; if (!n) return;
+            const lists = { 'cat': 'categories', 'inc': 'incomeCategories', 'pay': 'paymentMethods' };
+            state[lists[type]] = state[lists[type]].map(i => i.id === id ? { ...i, name: n, icon: tempIcon } : i);
+            saveData(); closeEditModal(); renderSettings(); renderAll();
+        }
+        function closeEditModal() { const modal = document.getElementById('modal-edit'); if (modal) modal.classList.add('hidden'); }
+        function addItem(type) {
+            const id = type + Date.now();
+            const lists = { 'cat': 'categories', 'inc': 'incomeCategories', 'pay': 'paymentMethods' };
+            state[lists[type]].push({ id, name: '新項目', icon: 'ShoppingBag' });
+            saveData(); openEditModal(type, id);
+        }
+        function deleteItem(type, id) { if (confirm('移除分類？')) { const lists = { 'cat': 'categories', 'inc': 'incomeCategories', 'pay': 'paymentMethods' }; state[lists[type]] = state[lists[type]].filter(i => i.id !== id); saveData(); renderSettings(); renderAll(); } }
+        function resetApp() { if (confirm('重置所有資料？')) { localStorage.removeItem('jp_v17_data'); window.location.reload(); } }
+
+        function init() {
+            loadData();
+            switchTab(state.activeTab);
+            setInputCurrency(state.inputCurrency);
+            setInputType(state.inputType);
+            const dateInput = document.getElementById('input-date');
+            if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
+            const dashMonthInput = document.getElementById('dash-month-input');
+            if (dashMonthInput) dashMonthInput.value = state.dashboardMonth;
+            const rateInput = document.getElementById('set-rate');
+            if (rateInput) {
+                rateInput.value = state.exchangeRate;
+                rateInput.oninput = (e) => { state.exchangeRate = parseFloat(e.target.value) || 0; saveData(); renderDashboard(); };
+            }
+            const amountInput = document.getElementById('input-amount');
+            if (amountInput) amountInput.oninput = renderConversionHint;
+            renderAll();
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
