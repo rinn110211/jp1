@@ -131,7 +131,7 @@
                 <div class="absolute -top-6 -right-6 p-4 text-blue-100 opacity-20 rotate-12 transition-transform duration-1000">
                     <i data-lucide="wallet" size="120"></i>
                 </div>
-                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest relative z-10 opacity-70">總剩餘資產 (含初期扣除)</p>
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest relative z-10 opacity-70">預估剩餘資產</p>
                 <h2 id="dash-total-assets" class="text-3xl font-black mt-1 text-slate-800 tracking-tighter relative z-10">¥0</h2>
                 <div class="mt-4 flex justify-between items-center relative z-10">
                     <span id="dash-total-twd" class="font-black text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl text-xs">≈ NT$ 0</span>
@@ -181,7 +181,7 @@
             <form onsubmit="saveTransaction(event)" class="space-y-4">
                 <div class="bg-white p-5 rounded-2xl shadow-lg border border-blue-50 relative overflow-hidden">
                     <div id="input-bg-accent" class="absolute top-0 right-0 w-16 h-16 bg-slate-100 rounded-full -mr-8 -mt-8 transition-all duration-700"></div>
-                    <label id="input-label" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest relative z-10">金額紀錄</label>
+                    <label id="input-label" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest relative z-10">輸入金額</label>
                     <div class="flex items-center mt-1 border-b border-slate-100 pb-1 focus-within:border-blue-500 relative z-10 transition-colors">
                         <span id="currency-symbol" class="text-xl font-black text-slate-300">¥</span>
                         <input type="number" step="any" id="input-amount" class="w-full bg-transparent border-none text-3xl font-black focus:ring-0 ml-1 text-slate-800 outline-none" placeholder="0">
@@ -329,7 +329,7 @@
         </button>
         <button onclick="switchTab('dashboard')" class="nav-btn flex flex-col items-center gap-1 text-slate-300 active" data-tab="dashboard">
             <i data-lucide="layout-dashboard" size="22"></i>
-            <span class="text-[8px] font-black tracking-widest uppercase">總覽</span>
+            <span class="text-[9px] font-black tracking-widest uppercase">總覽</span>
         </button>
         <button onclick="switchTab('initial')" class="nav-btn flex flex-col items-center gap-1 text-slate-300" data-tab="initial">
             <i data-lucide="calculator" size="22"></i>
@@ -422,12 +422,20 @@
                 { id: 'c2', name: '外食餐廳', icon: 'Utensils' },
                 { id: 'c3', name: '交通費用', icon: 'Train' },
                 { id: 'c4', name: '房租水電', icon: 'Home' },
-                { id: 'c5', name: '學習書籍', icon: 'BookOpen' }
+                { id: 'c5', name: '學習書籍', icon: 'BookOpen' },
+                { id: 'c6', name: '藥妝保養', icon: 'Heart' },
+                { id: 'c7', name: '百元商店', icon: 'Construction' },
+                { id: 'c8', name: '生活用品', icon: 'Coins' },
+                { id: 'c9', name: '通訊網費', icon: 'Wifi' },
+                { id: 'c10', name: '娛樂興趣', icon: 'Coffee' },
+                { id: 'c11', name: '醫療保險', icon: 'Stethoscope' },
+                { id: 'c12', name: '衣物飾品', icon: 'Shirt' }
             ],
             incomeCategories: [
                 { id: 'i1', name: '獎學金', icon: 'BookOpen' },
                 { id: 'i2', name: '零用錢', icon: 'Wallet' },
-                { id: 'i3', name: '薪資收入', icon: 'Coins' }
+                { id: 'i3', name: '薪資收入', icon: 'Coins' },
+                { id: 'i4', name: '其他收入', icon: 'Ticket' }
             ],
             payments: [
                 { id: 'p1', name: '台幣帳戶', icon: 'Wallet' },
@@ -466,7 +474,8 @@
             historyYear: new Date().getFullYear().toString(),
             selectedCategory: DEFAULTS.categories[0].id,
             selectedIncomeCategory: DEFAULTS.incomeCategories[0].id,
-            selectedPayment: DEFAULTS.payments[0].id
+            selectedPayment: DEFAULTS.payments[0].id,
+            editingItem: null
         };
 
         let myChart = null;
@@ -505,7 +514,6 @@
         function renderDashboard() {
             const incomeTotal = state.transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
             const expenseDaily = state.transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-            // 修正：總資產應計算全期初期費用
             const expenseInit = state.initialCosts.reduce((s, e) => s + e.actual, 0);
             const totalAssets = incomeTotal - expenseDaily - expenseInit;
 
@@ -555,7 +563,7 @@
                 catGrid.innerHTML = list.map(cat => {
                     const active = currentSel === cat.id;
                     const config = ICON_OPTIONS[cat.icon];
-                    return `<button type="button" onclick="setSelection('cat', '${cat.id}')" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-all dynamic-card ${active ? 'border-blue-500 bg-blue-50' : 'border-slate-100 bg-white shadow-sm'}"><i data-lucide="${config.icon}" size="18" style="color: ${config.color}"></i><span class="text-[8px] font-black truncate w-full text-center text-slate-500">${cat.name}</span></button>`;
+                    return `<button type="button" onclick="setSelection('cat', '${cat.id}')" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-all dynamic-card ${active ? 'border-blue-50 bg-blue-50' : 'border-slate-100 bg-white shadow-sm'}"><i data-lucide="${config.icon}" size="18" style="color: ${config.color}"></i><span class="text-[8px] font-black truncate w-full text-center text-slate-500">${cat.name}</span></button>`;
                 }).join('');
             }
 
@@ -619,7 +627,6 @@
             
             safeUpdate('init-total-display', `¥${totalActual.toLocaleString()}`);
             safeUpdate('init-rem-display', `¥${remaining.toLocaleString()}`);
-            safeUpdate('init-total-twd', `≈ NT$ ${Math.round(totalActual * state.exchangeRate).toLocaleString()}`);
             
             const bInput = document.getElementById('init-budget-input');
             if(bInput) bInput.value = budget / 10000;
