@@ -131,7 +131,7 @@
                 <div class="absolute -top-6 -right-6 p-4 text-blue-100 opacity-20 rotate-12 transition-transform duration-1000">
                     <i data-lucide="wallet" size="120"></i>
                 </div>
-                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest relative z-10 opacity-70">預估剩餘資產</p>
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest relative z-10 opacity-70">預估剩餘資產 (含初期扣除)</p>
                 <h2 id="dash-total-assets" class="text-3xl font-black mt-1 text-slate-800 tracking-tighter relative z-10">¥0</h2>
                 <div class="mt-4 flex justify-between items-center relative z-10">
                     <span id="dash-total-twd" class="font-black text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl text-xs">≈ NT$ 0</span>
@@ -181,7 +181,7 @@
             <form onsubmit="saveTransaction(event)" class="space-y-4">
                 <div class="bg-white p-5 rounded-2xl shadow-lg border border-blue-50 relative overflow-hidden">
                     <div id="input-bg-accent" class="absolute top-0 right-0 w-16 h-16 bg-slate-100 rounded-full -mr-8 -mt-8 transition-all duration-700"></div>
-                    <label id="input-label" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest relative z-10">輸入金額</label>
+                    <label id="input-label" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest relative z-10">金額紀錄</label>
                     <div class="flex items-center mt-1 border-b border-slate-100 pb-1 focus-within:border-blue-500 relative z-10 transition-colors">
                         <span id="currency-symbol" class="text-xl font-black text-slate-300">¥</span>
                         <input type="number" step="any" id="input-amount" class="w-full bg-transparent border-none text-3xl font-black focus:ring-0 ml-1 text-slate-800 outline-none" placeholder="0">
@@ -250,7 +250,7 @@
 
         <!-- Initial Costs Tab -->
         <section id="tab-initial" class="tab-content space-y-4">
-            <!-- 初期費用統計 (緊湊化) -->
+            <!-- 初期費用統計 -->
             <div class="bg-white rounded-[1.8rem] p-5 border border-blue-50 shadow-sm relative overflow-hidden dynamic-card">
                 <div class="absolute -top-4 -right-4 p-4 text-blue-50 opacity-30 rotate-12"><i data-lucide="plane" size="80"></i></div>
                 <div class="flex justify-between items-center mb-1">
@@ -273,7 +273,7 @@
                 </div>
             </div>
 
-            <!-- 預算上限編輯小卡片 -->
+            <!-- 預算上限編輯卡片 -->
             <div class="bg-white p-3.5 rounded-2xl border border-blue-100 shadow-sm flex items-center justify-between">
                 <div>
                     <h4 class="text-[9px] font-black text-blue-500 uppercase tracking-widest">初期預算上限設定</h4>
@@ -312,12 +312,12 @@
                 </form>
             </div>
 
-            <!-- 彩色清單項目 -->
+            <!-- 清單項目 -->
             <div id="initial-costs-list" class="space-y-2 pb-20"></div>
         </section>
     </main>
 
-    <!-- 懸浮式靈動導覽列 -->
+    <!-- 懸浮導覽列 -->
     <nav class="floating-nav glass-effect fixed max-w-md mx-auto py-3 px-8 flex justify-between items-center z-40">
         <button onclick="switchTab('add')" class="nav-btn flex flex-col items-center gap-1 text-slate-300" data-tab="add">
             <i data-lucide="plus-circle" size="22"></i>
@@ -341,11 +341,28 @@
     <div id="modal-settings" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-6 modal-backdrop">
         <div class="bg-white w-full max-w-sm rounded-[2.2rem] p-7 shadow-2xl relative animate-in zoom-in duration-300">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-lg font-black text-slate-800">自定義設定</h2>
+                <h2 class="text-lg font-black text-slate-800">資料與備份管理</h2>
                 <button onclick="toggleSettings(false)" class="p-2 bg-slate-50 rounded-full text-slate-400 hover:text-slate-600 transition-colors"><i data-lucide="x" size="18"></i></button>
             </div>
             
             <div class="space-y-5 max-h-[60vh] overflow-y-auto scrollbar-hide pr-1">
+                <!-- 備份區塊 -->
+                <section class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100">
+                    <h3 class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-3">資料備份與還原</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="exportData()" class="flex flex-col items-center gap-1.5 p-3 bg-white rounded-xl border border-blue-100 shadow-sm active:scale-95 transition-all">
+                            <i data-lucide="download" size="18" class="text-blue-600"></i>
+                            <span class="text-[10px] font-bold text-slate-600">匯出備份檔</span>
+                        </button>
+                        <button onclick="document.getElementById('import-file').click()" class="flex flex-col items-center gap-1.5 p-3 bg-white rounded-xl border border-blue-100 shadow-sm active:scale-95 transition-all">
+                            <i data-lucide="upload" size="18" class="text-blue-600"></i>
+                            <span class="text-[10px] font-bold text-slate-600">匯入備份檔</span>
+                        </button>
+                    </div>
+                    <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
+                    <p class="text-[8px] text-slate-400 mt-2 leading-tight">💡 建議每月將資料匯出儲存於 Google Drive，以防手機遺失或瀏覽器快取被清空。</p>
+                </section>
+
                 <section>
                     <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">匯率設定</h3>
                     <div class="bg-blue-50 p-3.5 rounded-2xl flex justify-between items-center shadow-inner border border-blue-100">
@@ -474,8 +491,7 @@
             historyYear: new Date().getFullYear().toString(),
             selectedCategory: DEFAULTS.categories[0].id,
             selectedIncomeCategory: DEFAULTS.incomeCategories[0].id,
-            selectedPayment: DEFAULTS.payments[0].id,
-            editingItem: null
+            selectedPayment: DEFAULTS.payments[0].id
         };
 
         let myChart = null;
@@ -501,6 +517,39 @@
                     state = { ...state, ...JSON.parse(saved) };
                 } catch(e) { console.error("Load failed", e); }
             }
+        }
+
+        // 匯出資料為 JSON
+        function exportData() {
+            const dataStr = JSON.stringify(state, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            const date = new Date().toISOString().split('T')[0];
+            link.href = url;
+            link.download = `JapanExpense_Backup_${date}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // 匯入資料
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedState = JSON.parse(e.target.result);
+                    if (confirm('確定要覆蓋現有資料嗎？此操作無法還原。')) {
+                        state = { ...state, ...importedState };
+                        saveData();
+                        window.location.reload();
+                    }
+                } catch (err) {
+                    alert('匯入失敗：無效的備份檔案格式。');
+                }
+            };
+            reader.readAsText(file);
         }
 
         function renderAll() {
@@ -562,8 +611,8 @@
             if (catGrid) {
                 catGrid.innerHTML = list.map(cat => {
                     const active = currentSel === cat.id;
-                    const config = ICON_OPTIONS[cat.icon];
-                    return `<button type="button" onclick="setSelection('cat', '${cat.id}')" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-all dynamic-card ${active ? 'border-blue-50 bg-blue-50' : 'border-slate-100 bg-white shadow-sm'}"><i data-lucide="${config.icon}" size="18" style="color: ${config.color}"></i><span class="text-[8px] font-black truncate w-full text-center text-slate-500">${cat.name}</span></button>`;
+                    const iconConfig = ICON_OPTIONS[cat.icon];
+                    return `<button type="button" onclick="setSelection('cat', '${cat.id}')" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-all dynamic-card ${active ? 'border-blue-50 bg-blue-50' : 'border-slate-100 bg-white shadow-sm'}"><i data-lucide="${iconConfig.icon}" size="18" style="color: ${iconConfig.color}"></i><span class="text-[8px] font-black truncate w-full text-center text-slate-500">${cat.name}</span></button>`;
                 }).join('');
             }
 
@@ -571,8 +620,8 @@
             if (payGrid) {
                 payGrid.innerHTML = state.paymentMethods.map(pay => {
                     const active = state.selectedPayment === pay.id;
-                    const config = ICON_OPTIONS[pay.icon];
-                    return `<button type="button" onclick="setSelection('pay', '${pay.id}')" class="flex items-center justify-center gap-1.5 p-2 rounded-lg border transition-all text-[9px] font-black dynamic-card ${active ? 'bg-slate-900 text-white border-slate-900 shadow-md' : 'bg-white text-slate-400 border-slate-100'}"><i data-lucide="${config.icon}" size="10" style="color: ${active ? '#fff' : config.color}"></i><span class="truncate">${pay.name}</span></button>`;
+                    const iconConfig = ICON_OPTIONS[pay.icon];
+                    return `<button type="button" onclick="setSelection('pay', '${pay.id}')" class="flex items-center justify-center gap-1.5 p-2 rounded-lg border transition-all text-[9px] font-black dynamic-card ${active ? 'bg-slate-900 text-white border-slate-900 shadow-md' : 'bg-white text-slate-400 border-slate-100'}"><i data-lucide="${iconConfig.icon}" size="10" style="color: ${active ? '#fff' : iconConfig.color}"></i><span class="truncate">${pay.name}</span></button>`;
                 }).join('');
             }
             lucide.createIcons();
@@ -583,7 +632,13 @@
             if (!wrap) return;
             if (state.historyFilter === 'day') wrap.innerHTML = `<input type="date" value="${state.historyDay}" onchange="changeHistoryDate('day', this.value)" class="bg-transparent outline-none">`;
             else if (state.historyFilter === 'month') wrap.innerHTML = `<input type="month" value="${state.historyMonth}" onchange="changeHistoryDate('month', this.value)" class="bg-transparent outline-none">`;
-            else wrap.innerHTML = `<select onchange="changeHistoryDate('year', this.value)" class="bg-transparent outline-none"><option value="2025">2025 年</option><option value="2026">2026 年</option></select>`;
+            else {
+                let years = [...new Set(state.transactions.map(e => e.date.split('-')[0]))];
+                const currentYear = new Date().getFullYear().toString();
+                if (!years.includes(currentYear)) years.push(currentYear);
+                years.sort((a,b) => b-a);
+                wrap.innerHTML = `<select onchange="changeHistoryDate('year', this.value)" class="bg-transparent outline-none">${years.map(y => `<option value="${y}" ${y === state.historyYear ? 'selected' : ''}>${y} 年</option>`).join('')}</select>`;
+            }
 
             const filtered = state.transactions.filter(e => {
                 if (state.historyFilter === 'day') return e.date === state.historyDay;
