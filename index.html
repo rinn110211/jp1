@@ -122,7 +122,7 @@
             <div class="flex justify-between items-center px-1">
                 <h2 class="text-lg font-black text-slate-800 tracking-tight">資產概覽</h2>
                 <div class="bg-white border border-slate-100 px-2 py-1 rounded-xl shadow-sm">
-                    <input type="month" id="dash-month-input" onchange="changeDashboardMonth(this.value)" class="text-[10px] font-bold text-blue-600 border-none bg-transparent outline-none cursor-pointer">
+                    <input type="month" id="dash-month-input" onchange="changeDashboardMonth(this.value)" class="text-xs font-bold text-blue-600 border-none bg-transparent outline-none cursor-pointer">
                 </div>
             </div>
 
@@ -131,31 +131,31 @@
                 <div class="absolute -top-6 -right-6 p-4 text-blue-100 opacity-20 rotate-12 transition-transform duration-1000">
                     <i data-lucide="wallet" size="120"></i>
                 </div>
-                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest relative z-10 opacity-70">預估剩餘資產 (含初期扣除)</p>
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest relative z-10 opacity-70">預估剩餘資產 (含初期扣除)</p>
                 <h2 id="dash-total-assets" class="text-3xl font-black mt-1 text-slate-800 tracking-tighter relative z-10">¥0</h2>
                 <div class="mt-4 flex justify-between items-center relative z-10">
-                    <span id="dash-total-twd" class="font-black text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl text-xs">≈ NT$ 0</span>
-                    <span id="dash-rate" class="text-[9px] font-bold text-slate-300">1 JPY = 0.215 TWD</span>
+                    <span id="dash-total-twd" class="font-black text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl text-sm">≈ NT$ 0</span>
+                    <span id="dash-rate" class="text-[10px] font-bold text-slate-300">1 JPY = 0.215 TWD</span>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 shadow-sm text-center dynamic-card">
-                    <p class="text-[9px] text-emerald-600 font-black uppercase mb-0.5">該月收入</p>
+                    <p class="text-[10px] text-emerald-600 font-black uppercase mb-0.5">該月收入</p>
                     <p id="dash-month-income" class="font-black text-base text-emerald-700">¥0</p>
                 </div>
                 <div class="bg-slate-100 p-4 rounded-2xl border border-slate-200 shadow-sm text-center dynamic-card">
-                    <p class="text-[9px] text-slate-500 font-black uppercase mb-0.5">該月支出</p>
+                    <p class="text-[10px] text-slate-500 font-black uppercase mb-0.5">該月支出</p>
                     <p id="dash-month-expense" class="font-black text-base text-slate-800">¥0</p>
                 </div>
             </div>
 
             <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">支出類別分布</h3>
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest text-center">支出類別分布</h3>
                 <div class="relative h-48 w-full flex justify-center">
                     <canvas id="expenseChart"></canvas>
                 </div>
-                <div id="chart-legend-empty" class="hidden text-center py-4 text-slate-300 text-[10px] font-bold italic">該月份目前無支出數據</div>
+                <div id="chart-legend-empty" class="hidden text-center py-4 text-slate-300 text-xs font-bold italic">該月份目前無支出數據</div>
             </div>
         </section>
 
@@ -164,16 +164,16 @@
             <div class="flex justify-between items-center px-1">
                 <h2 class="text-xl font-black text-slate-800">新增紀錄</h2>
                 <div class="bg-slate-200/50 p-1 rounded-xl flex gap-1 shadow-inner">
-                    <button onclick="setInputCurrency('JPY')" id="btn-jpy" class="px-3 py-1.5 rounded-lg text-[9px] font-black transition-all bg-white text-blue-600 shadow-sm">JPY</button>
-                    <button onclick="setInputCurrency('TWD')" id="btn-twd" class="px-3 py-1.5 rounded-lg text-[9px] font-black transition-all text-slate-500">TWD</button>
+                    <button onclick="setInputCurrency('JPY')" id="btn-jpy" class="px-3 py-1.5 rounded-lg text-xs font-black transition-all bg-white text-blue-600 shadow-sm">JPY</button>
+                    <button onclick="setInputCurrency('TWD')" id="btn-twd" class="px-3 py-1.5 rounded-lg text-xs font-black transition-all text-slate-500">TWD</button>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 bg-slate-200/50 p-1 rounded-[18px] shadow-inner">
-                <button onclick="setInputType('expense')" id="btn-type-expense" class="py-2.5 rounded-2xl text-[11px] font-black transition-all bg-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5">
+                <button onclick="setInputType('expense')" id="btn-type-expense" class="py-2.5 rounded-2xl text-xs font-black transition-all bg-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5">
                     <i data-lucide="arrow-down-right" size="14"></i> 支出項目
                 </button>
-                <button onclick="setInputType('income')" id="btn-type-income" class="py-2.5 rounded-2xl text-[11px] font-black transition-all text-slate-500 flex items-center justify-center gap-1.5">
+                <button onclick="setInputType('income')" id="btn-type-income" class="py-2.5 rounded-2xl text-xs font-black transition-all text-slate-500 flex items-center justify-center gap-1.5">
                     <i data-lucide="arrow-up-right" size="14"></i> 收入來源
                 </button>
             </div>
@@ -181,30 +181,30 @@
             <form onsubmit="saveTransaction(event)" class="space-y-4">
                 <div class="bg-white p-5 rounded-2xl shadow-lg border border-blue-50 relative overflow-hidden">
                     <div id="input-bg-accent" class="absolute top-0 right-0 w-16 h-16 bg-slate-100 rounded-full -mr-8 -mt-8 transition-all duration-700"></div>
-                    <label id="input-label" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest relative z-10">金額紀錄</label>
+                    <label id="input-label" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest relative z-10">金額紀錄</label>
                     <div class="flex items-center mt-1 border-b border-slate-100 pb-1 focus-within:border-blue-500 relative z-10 transition-colors">
                         <span id="currency-symbol" class="text-xl font-black text-slate-300">¥</span>
                         <input type="number" step="any" id="input-amount" class="w-full bg-transparent border-none text-3xl font-black focus:ring-0 ml-1 text-slate-800 outline-none" placeholder="0">
                     </div>
-                    <p id="conversion-hint" class="mt-2 text-[10px] font-bold text-blue-400 hidden flex items-center gap-1 relative z-10"></p>
+                    <p id="conversion-hint" class="mt-2 text-xs font-bold text-blue-400 hidden flex items-center gap-1 relative z-10"></p>
                 </div>
 
                 <div class="flex gap-2">
                     <div class="flex-1 bg-white p-0.5 rounded-xl border border-slate-100 shadow-sm">
-                        <input type="date" id="input-date" class="w-full bg-transparent p-2.5 text-[10px] font-black outline-none text-slate-600">
+                        <input type="date" id="input-date" class="w-full bg-transparent p-2.5 text-xs font-black outline-none text-slate-600">
                     </div>
                     <div class="flex-[1.5] bg-white p-0.5 rounded-xl border border-slate-100 shadow-sm">
-                        <input type="text" id="input-note" placeholder="寫點備註..." class="w-full bg-transparent p-2.5 text-[10px] font-black outline-none text-slate-600">
+                        <input type="text" id="input-note" placeholder="寫點備註..." class="w-full bg-transparent p-2.5 text-xs font-black outline-none text-slate-600">
                     </div>
                 </div>
 
                 <div class="space-y-2">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">分類</p>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">分類</p>
                     <div class="grid grid-cols-4 gap-2" id="add-category-grid"></div>
                 </div>
 
                 <div class="space-y-2">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">支付管道</p>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">支付管道</p>
                     <div class="grid grid-cols-3 gap-2" id="add-payment-grid"></div>
                 </div>
 
@@ -219,47 +219,46 @@
             <div class="flex justify-between items-center px-1">
                 <h2 class="text-xl font-black text-slate-800">歷史明細</h2>
                 <div class="flex bg-slate-200/50 p-1 rounded-xl shadow-inner" id="history-filter">
-                    <button onclick="setFilter('day')" id="filter-day" class="px-3 py-1 rounded-lg text-[9px] font-black uppercase transition-all text-slate-500">本日</button>
-                    <button onclick="setFilter('month')" id="filter-month" class="px-3 py-1 rounded-lg text-[9px] font-black uppercase transition-all bg-white text-blue-600 shadow-sm">本月</button>
-                    <button onclick="setFilter('all')" id="filter-all" class="px-3 py-1 rounded-lg text-[9px] font-black uppercase transition-all text-slate-500">全部</button>
+                    <button onclick="setFilter('day')" id="filter-day" class="px-3 py-1 rounded-lg text-xs font-black uppercase transition-all text-slate-500">本日</button>
+                    <button onclick="setFilter('month')" id="filter-month" class="px-3 py-1 rounded-lg text-xs font-black uppercase transition-all bg-white text-blue-600 shadow-sm">本月</button>
+                    <button onclick="setFilter('all')" id="filter-all" class="px-3 py-1 rounded-lg text-xs font-black uppercase transition-all text-slate-500">全部</button>
                 </div>
             </div>
 
             <div class="glass-effect p-3 px-4 rounded-2xl flex items-center justify-between shadow-sm">
                 <span id="date-selector-label" class="text-[10px] font-black text-slate-400 uppercase">篩選範圍</span>
-                <div id="date-input-wrapper" class="font-bold text-blue-600 text-xs"></div>
+                <div id="date-input-wrapper" class="font-bold text-blue-600 text-sm"></div>
             </div>
 
             <div class="bg-white p-5 rounded-[1.8rem] border border-slate-100 shadow-sm space-y-2">
                 <div class="flex justify-between items-center">
-                    <span class="text-[9px] font-bold text-slate-400 uppercase">區間收入合計</span>
-                    <span id="history-period-income" class="text-emerald-600 font-black text-xs">¥0</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">區間收入合計</span>
+                    <span id="history-period-income" class="text-emerald-600 font-black text-sm">¥0</span>
                 </div>
                 <div class="flex justify-between items-center border-t border-slate-50 pt-2">
-                    <span class="text-[9px] font-bold text-slate-400 uppercase">區間支出合計</span>
-                    <span id="history-period-expense" class="text-slate-700 font-black text-xs">¥0</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">區間支出合計</span>
+                    <span id="history-period-expense" class="text-slate-700 font-black text-sm">¥0</span>
                 </div>
                 <div class="flex justify-between items-center border-t-2 border-blue-50 pt-2 mt-1">
-                    <span class="text-[10px] font-black text-slate-800 uppercase">區間總損益</span>
-                    <span id="history-period-balance" class="text-blue-600 font-black text-base">¥0</span>
+                    <span class="text-xs font-black text-slate-800 uppercase">區間總損益</span>
+                    <span id="history-period-balance" class="text-blue-600 font-black text-lg">¥0</span>
                 </div>
             </div>
 
-            <div id="history-list" class="space-y-2 pb-20"></div>
+            <div id="history-list" class="space-y-2.5 pb-20"></div>
         </section>
 
         <!-- Initial Costs Tab -->
         <section id="tab-initial" class="tab-content space-y-4">
-            <!-- 初期費用統計 (緊湊化) -->
             <div class="bg-white rounded-[1.8rem] p-5 border border-blue-50 shadow-sm relative overflow-hidden dynamic-card">
                 <div class="absolute -top-4 -right-4 p-4 text-blue-50 opacity-30 rotate-12"><i data-lucide="plane" size="80"></i></div>
                 <div class="flex justify-between items-center mb-1">
                     <div>
-                        <p class="text-slate-400 text-[9px] font-bold uppercase tracking-widest relative z-10">實際總開銷</p>
+                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest relative z-10">實際總開銷</p>
                         <h2 id="init-total-display" class="text-2xl font-black text-slate-800 relative z-10">¥0</h2>
                     </div>
                     <div class="text-right">
-                        <p class="text-slate-400 text-[9px] font-bold uppercase tracking-widest relative z-10">剩餘預算</p>
+                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest relative z-10">剩餘預算</p>
                         <h2 id="init-rem-display" class="text-xl font-black text-blue-600 relative z-10">¥0</h2>
                     </div>
                 </div>
@@ -267,20 +266,19 @@
                 <div class="mt-3 relative h-1 bg-slate-100 rounded-full overflow-hidden z-10">
                     <div id="init-progress-bar" class="h-full bg-blue-600 transition-all duration-1000 rounded-full" style="width: 0%"></div>
                 </div>
-                <div class="flex justify-between mt-1.5 text-[9px] font-black uppercase text-slate-400 relative z-10">
+                <div class="flex justify-between mt-1.5 text-[10px] font-black uppercase text-slate-400 relative z-10">
                     <span>預算進度</span>
                     <span id="init-progress-text" class="text-blue-600 font-bold">0%</span>
                 </div>
             </div>
 
-            <!-- 預算上限編輯卡片 -->
-            <div class="bg-white p-3 rounded-2xl border border-blue-100 shadow-sm flex items-center justify-between">
+            <div class="bg-white p-3.5 rounded-2xl border border-blue-100 shadow-sm flex items-center justify-between">
                 <div>
-                    <h4 class="text-[9px] font-black text-blue-500 uppercase tracking-widest">初期預算上限設定</h4>
+                    <h4 class="text-[10px] font-black text-blue-500 uppercase tracking-widest">初期預算上限設定</h4>
                     <div class="flex items-center gap-1 mt-0.5">
-                        <span class="text-xs font-black text-slate-700">¥</span>
-                        <input type="number" id="init-budget-input" oninput="updateInitialBudget(this.value)" class="w-16 bg-slate-50 border-none rounded-lg p-1 text-xs font-black text-blue-600 outline-none" placeholder="0">
-                        <span class="text-[10px] font-bold text-slate-400">萬</span>
+                        <span class="text-sm font-black text-slate-700">¥</span>
+                        <input type="number" id="init-budget-input" oninput="updateInitialBudget(this.value)" class="w-16 bg-slate-50 border-none rounded-lg p-1 text-sm font-black text-blue-600 outline-none" placeholder="0">
+                        <span class="text-xs font-bold text-slate-400">萬</span>
                     </div>
                 </div>
                 <div class="bg-blue-50 p-1.5 rounded-lg text-blue-600">
@@ -288,21 +286,20 @@
                 </div>
             </div>
 
-            <!-- 大型支出表單 (緊湊化) -->
-            <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-md space-y-3">
-                <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">新增初期大型支出</h3>
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-md space-y-3">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">新增初期大型支出</h3>
                 <form onsubmit="saveInitialCost(event)" class="space-y-2">
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="init-input-name" placeholder="項目" class="w-full bg-slate-50 border-none rounded-lg p-2 text-xs font-black outline-none focus:ring-1 focus:ring-blue-100 transition-all">
-                        <input type="text" id="init-input-note" placeholder="詳細備註" class="w-full bg-slate-50 border-none rounded-lg p-2 text-xs font-black outline-none focus:ring-1 focus:ring-blue-100 transition-all">
+                        <input type="text" id="init-input-name" placeholder="項目" class="w-full bg-slate-50 border-none rounded-lg p-2.5 text-xs font-black outline-none focus:ring-1 focus:ring-blue-100 transition-all">
+                        <input type="text" id="init-input-note" placeholder="詳細備註" class="w-full bg-slate-50 border-none rounded-lg p-2.5 text-xs font-black outline-none focus:ring-1 focus:ring-blue-100 transition-all">
                     </div>
                     <div class="flex gap-2">
                         <div class="flex-1 flex items-center bg-slate-50 rounded-lg px-2 border border-slate-100">
-                            <span class="text-[8px] font-bold text-slate-400 mr-1 shrink-0">預算</span>
+                            <span class="text-[10px] font-bold text-slate-400 mr-1 shrink-0">預算</span>
                             <input type="number" id="init-input-budget" placeholder="¥" class="w-full bg-transparent p-1.5 text-xs font-black outline-none">
                         </div>
                         <div class="flex-1 flex items-center bg-slate-50 rounded-lg px-2 border border-slate-100">
-                            <span class="text-[8px] font-bold text-slate-400 mr-1 shrink-0">實際</span>
+                            <span class="text-[10px] font-bold text-slate-400 mr-1 shrink-0">實際</span>
                             <input type="number" id="init-input-actual" placeholder="¥" class="w-full bg-transparent p-1.5 text-xs font-black outline-none">
                         </div>
                         <button type="submit" class="bg-slate-900 text-white px-4 rounded-lg font-black shadow-lg active:scale-90 transition-all">
@@ -312,7 +309,6 @@
                 </form>
             </div>
 
-            <!-- 清單項目 (緊湊化) -->
             <div id="initial-costs-list" class="space-y-2 pb-20"></div>
         </section>
     </main>
@@ -321,19 +317,19 @@
     <nav class="floating-nav glass-effect fixed max-w-md mx-auto py-3 px-8 flex justify-between items-center z-40">
         <button onclick="switchTab('add')" class="nav-btn flex flex-col items-center gap-1 text-slate-300" data-tab="add">
             <i data-lucide="plus-circle" size="22"></i>
-            <span class="text-[8px] font-black tracking-widest uppercase">新增</span>
+            <span class="text-[10px] font-black tracking-widest uppercase">新增</span>
         </button>
         <button onclick="switchTab('history')" class="nav-btn flex flex-col items-center gap-1 text-slate-300" data-tab="history">
             <i data-lucide="list" size="22"></i>
-            <span class="text-[8px] font-black tracking-widest uppercase">明細</span>
+            <span class="text-[10px] font-black tracking-widest uppercase">明細</span>
         </button>
         <button onclick="switchTab('dashboard')" class="nav-btn flex flex-col items-center gap-1 text-slate-300 active" data-tab="dashboard">
             <i data-lucide="layout-dashboard" size="22"></i>
-            <span class="text-[8px] font-black tracking-widest uppercase">總覽</span>
+            <span class="text-[10px] font-black tracking-widest uppercase">總覽</span>
         </button>
         <button onclick="switchTab('initial')" class="nav-btn flex flex-col items-center gap-1 text-slate-300" data-tab="initial">
             <i data-lucide="calculator" size="22"></i>
-            <span class="text-[8px] font-black tracking-widest uppercase">初期</span>
+            <span class="text-[10px] font-black tracking-widest uppercase">初期</span>
         </button>
     </nav>
 
@@ -347,50 +343,50 @@
             
             <div class="space-y-5 max-h-[60vh] overflow-y-auto scrollbar-hide pr-1">
                 <section class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100">
-                    <h3 class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-3">資料備份與還原</h3>
+                    <h3 class="text-xs font-black text-blue-600 uppercase tracking-widest mb-3">資料備份與還原</h3>
                     <div class="grid grid-cols-2 gap-2">
                         <button onclick="exportData()" class="flex flex-col items-center gap-1.5 p-3 bg-white rounded-xl border border-blue-100 shadow-sm active:scale-95 transition-all">
                             <i data-lucide="download" size="18" class="text-blue-600"></i>
-                            <span class="text-[10px] font-bold text-slate-600">匯出備份檔</span>
+                            <span class="text-xs font-bold text-slate-600">匯出備份檔</span>
                         </button>
                         <button onclick="document.getElementById('import-file').click()" class="flex flex-col items-center gap-1.5 p-3 bg-white rounded-xl border border-blue-100 shadow-sm active:scale-95 transition-all">
                             <i data-lucide="upload" size="18" class="text-blue-600"></i>
-                            <span class="text-[10px] font-bold text-slate-600">匯入備份檔</span>
+                            <span class="text-xs font-bold text-slate-600">匯入備份檔</span>
                         </button>
                     </div>
                     <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
-                    <p class="text-[8px] text-slate-400 mt-2 leading-tight">💡 建議每月將資料匯出儲存於 Google Drive，以防快取被清空。</p>
+                    <p class="text-[10px] text-slate-400 mt-2 leading-tight">💡 建議每月將資料匯出儲存於 Google Drive，以防快取被清空。</p>
                 </section>
 
                 <section>
-                    <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">匯率設定</h3>
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 px-1">匯率設定</h3>
                     <div class="bg-blue-50 p-3.5 rounded-2xl flex justify-between items-center shadow-inner border border-blue-100">
-                        <span class="text-[10px] font-black text-blue-600">1 JPY =</span>
+                        <span class="text-sm font-black text-blue-600">1 JPY =</span>
                         <input type="number" step="0.001" id="set-rate" class="w-20 bg-white border-none rounded-xl p-2 text-right font-black text-blue-600 outline-none shadow-sm">
                     </div>
                 </section>
                 <section>
                     <div class="flex justify-between items-center mb-2 px-1">
-                        <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">支出分類</h3>
-                        <button onclick="addItem('cat')" class="text-[9px] font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">新增</button>
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">支出分類</h3>
+                        <button onclick="addItem('cat')" class="text-xs font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">新增</button>
                     </div>
                     <div id="settings-cat-list" class="space-y-1.5"></div>
                 </section>
                 <section>
                     <div class="flex justify-between items-center mb-2 px-1">
-                        <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">收入分類</h3>
-                        <button onclick="addItem('inc')" class="text-[9px] font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">新增</button>
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">收入分類</h3>
+                        <button onclick="addItem('inc')" class="text-xs font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">新增</button>
                     </div>
                     <div id="settings-inc-list" class="space-y-1.5"></div>
                 </section>
                 <section>
                     <div class="flex justify-between items-center mb-2 px-1">
-                        <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">支付帳戶</h3>
-                        <button onclick="addItem('pay')" class="text-[9px] font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">新增</button>
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">支付帳戶</h3>
+                        <button onclick="addItem('pay')" class="text-xs font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">新增</button>
                     </div>
                     <div id="settings-pay-list" class="space-y-1.5"></div>
                 </section>
-                <button onclick="resetApp()" class="w-full text-red-400 text-[9px] font-black py-4 bg-red-50 rounded-2xl tracking-widest uppercase hover:bg-red-100 transition-colors mt-4">清除所有資料</button>
+                <button onclick="resetApp()" class="w-full text-red-400 text-xs font-black py-4 bg-red-50 rounded-2xl tracking-widest uppercase hover:bg-red-100 transition-colors mt-4">清除所有資料</button>
             </div>
         </div>
     </div>
@@ -419,19 +415,19 @@
             </div>
             <div class="space-y-4 max-h-[70vh] overflow-y-auto scrollbar-hide p-1">
                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">金額 (日幣)</label>
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">金額 (日幣)</label>
                     <input type="number" id="edit-trans-amount" class="w-full bg-transparent border-none text-2xl font-black focus:ring-0 text-slate-800 outline-none" placeholder="0">
                 </div>
                 <div class="flex gap-2">
-                    <input type="date" id="edit-trans-date" class="flex-1 bg-slate-50 rounded-xl p-2.5 text-[10px] font-black outline-none border border-slate-100 text-slate-600">
-                    <input type="text" id="edit-trans-note" placeholder="備註..." class="flex-1 bg-slate-50 rounded-xl p-2.5 text-[10px] font-black outline-none border border-slate-100 text-slate-600">
+                    <input type="date" id="edit-trans-date" class="flex-1 bg-slate-50 rounded-xl p-2.5 text-xs font-black outline-none border border-slate-100 text-slate-600">
+                    <input type="text" id="edit-trans-note" placeholder="備註..." class="flex-1 bg-slate-50 rounded-xl p-2.5 text-xs font-black outline-none border border-slate-100 text-slate-600">
                 </div>
                 <div class="space-y-1">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">分類</p>
+                    <p class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">分類</p>
                     <div class="grid grid-cols-4 gap-2" id="edit-trans-cat-grid"></div>
                 </div>
                 <div class="space-y-1">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">支付管道</p>
+                    <p class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">支付管道</p>
                     <div class="grid grid-cols-3 gap-2" id="edit-trans-pay-grid"></div>
                 </div>
                 <button onclick="saveTransactionEdit()" class="w-full bg-slate-900 text-white font-black py-4 rounded-xl shadow-xl active:scale-95 transition-all text-sm mt-4">儲存變更</button>
@@ -452,11 +448,11 @@
                     <input type="text" id="edit-init-note" placeholder="詳細備註" class="w-full bg-white border-none rounded-xl p-3 text-xs font-black outline-none shadow-sm">
                     <div class="flex gap-2">
                         <div class="flex-1 bg-white p-2 rounded-xl shadow-sm border border-slate-100">
-                            <label class="text-[8px] font-black text-slate-400 block mb-0.5">預算 (¥)</label>
+                            <label class="text-[10px] font-black text-slate-400 block mb-0.5">預算 (¥)</label>
                             <input type="number" id="edit-init-budget" class="w-full bg-transparent border-none text-sm font-black outline-none">
                         </div>
                         <div class="flex-1 bg-white p-2 rounded-xl shadow-sm border border-slate-100">
-                            <label class="text-[8px] font-black text-slate-400 block mb-0.5">實際 (¥)</label>
+                            <label class="text-[10px] font-black text-slate-400 block mb-0.5">實際 (¥)</label>
                             <input type="number" id="edit-init-actual" class="w-full bg-transparent border-none text-sm font-black outline-none">
                         </div>
                     </div>
@@ -519,6 +515,7 @@
                 { id: 'p7', name: '信用卡2', icon: 'CreditCard' },
                 { id: 'p8', name: '信用卡3', icon: 'CreditCard' }
             ],
+            initialBudgetDefault: 0,
             initialCostsDefault: [
                 { id: 'd1', name: '語言學校學費', budget: 800000, actual: 820000, note: '半年份學費含雜費' },
                 { id: 'd2', name: '租房首付', budget: 300000, actual: 285000, note: '押金、禮金、仲介費' },
@@ -530,7 +527,7 @@
         let state = {
             transactions: [],
             initialCosts: [...DEFAULTS.initialCostsDefault],
-            initialBudget: 1500000,
+            initialBudget: 0,
             exchangeRate: 0.215,
             categories: [...DEFAULTS.categories],
             incomeCategories: [...DEFAULTS.incomeCategories],
@@ -668,7 +665,7 @@
                 catGrid.innerHTML = list.map(cat => {
                     const active = currentSel === cat.id;
                     const config = ICON_OPTIONS[cat.icon];
-                    return `<button type="button" onclick="setSelection('cat', '${cat.id}')" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-all dynamic-card ${active ? 'border-blue-500 bg-blue-50' : 'border-slate-100 bg-white shadow-sm'}"><i data-lucide="${config.icon}" size="18" style="color: ${config.color}"></i><span class="text-[8px] font-black truncate w-full text-center text-slate-500">${cat.name}</span></button>`;
+                    return `<button type="button" onclick="setSelection('cat', '${cat.id}')" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-all dynamic-card ${active ? 'border-blue-500 bg-blue-50' : 'border-slate-100 bg-white shadow-sm'}"><i data-lucide="${config.icon}" size="18" style="color: ${config.color}"></i><span class="text-[10px] font-black truncate w-full text-center text-slate-500 leading-tight">${cat.name}</span></button>`;
                 }).join('');
             }
 
@@ -677,7 +674,7 @@
                 payGrid.innerHTML = state.paymentMethods.map(pay => {
                     const active = state.selectedPayment === pay.id;
                     const config = ICON_OPTIONS[pay.icon];
-                    return `<button type="button" onclick="setSelection('pay', '${pay.id}')" class="flex items-center justify-center gap-1.5 p-2 rounded-lg border transition-all text-[9px] font-black dynamic-card ${active ? 'bg-slate-900 text-white border-slate-900 shadow-md' : 'bg-white text-slate-400 border-slate-100'}"><i data-lucide="${config.icon}" size="10" style="color: ${active ? '#fff' : config.color}"></i><span class="truncate ml-1">${pay.name}</span></button>`;
+                    return `<button type="button" onclick="setSelection('pay', '${pay.id}')" class="flex items-center justify-center gap-1.5 p-2 rounded-lg border transition-all text-xs font-black dynamic-card ${active ? 'bg-slate-900 text-white border-slate-900 shadow-md' : 'bg-white text-slate-400 border-slate-100'}"><i data-lucide="${config.icon}" size="10" style="color: ${active ? '#fff' : config.color}"></i><span class="truncate ml-1">${pay.name}</span></button>`;
                 }).join('');
             }
             lucide.createIcons();
@@ -718,16 +715,16 @@
                     return `<div class="p-2.5 px-4 rounded-[1.2rem] flex items-center justify-between shadow-sm dynamic-card border border-white" style="background-color: ${hexToRgba(config.color, 0.05)}; border-left: 4px solid ${config.color}">
                         <div class="flex items-center gap-3">
                             <div class="bg-white/90 p-2 rounded-xl"><i data-lucide="${config.icon}" size="14" style="color: ${config.color}"></i></div>
-                            <div><h4 class="font-black text-slate-800 text-[11px] leading-tight">${t.note || cat?.name}</h4><p class="text-[8px] text-slate-400 font-bold uppercase tracking-tighter">${pay?.name || '帳戶'} • ${t.date}</p></div>
+                            <div><h4 class="font-black text-slate-800 text-xs leading-tight">${t.note || cat?.name}</h4><p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">${pay?.name || '帳戶'} • ${t.date}</p></div>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="text-right mr-1">
-                                <p class="font-black ${t.type === 'income' ? 'income-text' : 'expense-text'} text-xs">${t.type === 'income' ? '+' : '-'}¥${t.amount.toLocaleString()}</p>
-                                <p class="text-[8px] text-slate-400 font-bold">NT$ ${t.twd.toLocaleString()}</p>
+                                <p class="font-black ${t.type === 'income' ? 'income-text' : 'expense-text'} text-[13px] leading-none">${t.type === 'income' ? '+' : '-'}¥${t.amount.toLocaleString()}</p>
+                                <p class="text-[10px] text-slate-400 font-bold mt-1">NT$ ${t.twd.toLocaleString()}</p>
                             </div>
                             <div class="flex flex-col gap-0.5 shrink-0">
-                                <button onclick="editRecord('${t.id}')" class="p-1 text-slate-300 hover:text-blue-500 transition-colors"><i data-lucide="edit-3" size="12"></i></button>
-                                <button onclick="deleteRecord('${t.id}')" class="p-1 text-slate-300 hover:text-red-500 transition-colors"><i data-lucide="trash-2" size="12"></i></button>
+                                <button onclick="editRecord('${t.id}')" class="p-1 text-slate-300 hover:text-blue-500 transition-colors"><i data-lucide="edit-3" size="14"></i></button>
+                                <button onclick="deleteRecord('${t.id}')" class="p-1 text-slate-300 hover:text-red-500 transition-colors"><i data-lucide="trash-2" size="14"></i></button>
                             </div>
                         </div>
                     </div>`;
@@ -760,22 +757,24 @@
                     const bg = hexToRgba(statusColor, 0.04);
 
                     return `
-                    <div class="p-2 px-4 rounded-xl border border-white shadow-sm dynamic-card flex flex-col gap-0.5" style="background-color: ${bg}; border-left: 3px solid ${statusColor}">
+                    <div class="p-2.5 px-4 rounded-2xl border border-white shadow-sm dynamic-card flex flex-col gap-1" style="background-color: ${bg}; border-left: 4px solid ${statusColor}">
                         <div class="flex justify-between items-start">
                             <div class="flex-1 overflow-hidden">
-                                <span class="font-black text-[11px] text-slate-800 leading-none truncate block">${item.name}</span>
-                                <p class="text-[8px] text-slate-400 font-bold leading-tight truncate">${item.note || '無詳細內容'}</p>
+                                <span class="font-black text-xs text-slate-800 leading-none truncate block">${item.name}</span>
+                                <p class="text-[10px] text-slate-400 font-bold leading-tight truncate mt-1">${item.note || '無詳細內容'}</p>
                             </div>
                             <div class="flex gap-1.5 ml-2">
-                                <button onclick="editInitialCost('${item.id}')" class="text-slate-200 hover:text-blue-500"><i data-lucide="edit-3" size="11"></i></button>
-                                <button onclick="deleteInitial('${item.id}')" class="text-slate-200 hover:text-red-400"><i data-lucide="trash-2" size="11"></i></button>
+                                <button onclick="editInitialCost('${item.id}')" class="text-slate-200 hover:text-blue-500"><i data-lucide="edit-3" size="13"></i></button>
+                                <button onclick="deleteInitial('${item.id}')" class="text-slate-200 hover:text-red-400"><i data-lucide="trash-2" size="13"></i></button>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <div class="text-[8px] font-black uppercase text-slate-300">預算 ¥${item.budget.toLocaleString()}</div>
+                        <div class="flex justify-between items-center mt-0.5">
+                            <div class="text-[10px] font-black uppercase text-slate-400 opacity-60">
+                                預算 ¥${item.budget.toLocaleString()}
+                            </div>
                             <div class="text-right">
-                                <span class="text-[8px] font-bold text-slate-400 mr-0.5 uppercase">實際</span>
-                                <span class="font-black text-slate-700 text-[11px]">¥${item.actual.toLocaleString()}</span>
+                                <span class="text-[10px] font-bold text-slate-400 mr-0.5 uppercase">實際</span>
+                                <span class="font-black text-slate-700 text-xs">¥${item.actual.toLocaleString()}</span>
                             </div>
                         </div>
                     </div>`;
@@ -805,13 +804,13 @@
             catGrid.innerHTML = catList.map(cat => {
                 const active = state.editTransSelectedCategory === cat.id;
                 const config = ICON_OPTIONS[cat.icon];
-                return `<button type="button" onclick="setEditTransSelection('cat', '${cat.id}')" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-all ${active ? 'border-blue-500 bg-blue-50' : 'border-slate-100 bg-white shadow-sm'}"><i data-lucide="${config.icon}" size="16" style="color: ${config.color}"></i><span class="text-[7px] font-black truncate w-full text-center text-slate-500">${cat.name}</span></button>`;
+                return `<button type="button" onclick="setEditTransSelection('cat', '${cat.id}')" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-all ${active ? 'border-blue-500 bg-blue-50' : 'border-slate-100 bg-white shadow-sm'}"><i data-lucide="${config.icon}" size="16" style="color: ${config.color}"></i><span class="text-[9px] font-black truncate w-full text-center text-slate-500 leading-tight">${cat.name}</span></button>`;
             }).join('');
             const payGrid = document.getElementById('edit-trans-pay-grid');
             payGrid.innerHTML = state.paymentMethods.map(pay => {
                 const active = state.editTransSelectedPayment === pay.id;
                 const config = ICON_OPTIONS[pay.icon];
-                return `<button type="button" onclick="setEditTransSelection('pay', '${pay.id}')" class="flex items-center justify-center gap-1 p-2 rounded-lg border transition-all text-[8px] font-bold ${active ? 'bg-slate-800 text-white border-slate-800 shadow-md' : 'bg-white text-slate-400 border-slate-100'}"><i data-lucide="${config.icon}" size="10" style="color: ${active ? '#fff' : config.color}"></i><span class="truncate ml-1">${pay.name}</span></button>`;
+                return `<button type="button" onclick="setEditTransSelection('pay', '${pay.id}')" class="flex items-center justify-center gap-1 p-2 rounded-lg border transition-all text-xs font-black ${active ? 'bg-slate-900 text-white border-slate-800 shadow-md' : 'bg-white text-slate-400 border-slate-100'}"><i data-lucide="${config.icon}" size="10" style="color: ${active ? '#fff' : config.color}"></i><span class="truncate ml-1">${pay.name}</span></button>`;
             }).join('');
             lucide.createIcons();
         }
@@ -903,8 +902,8 @@
             const isExp = type === 'expense';
             const bExp = document.getElementById('btn-type-expense');
             const bInc = document.getElementById('btn-type-income');
-            if(bExp) bExp.className = isExp ? 'py-2.5 rounded-2xl text-[11px] font-black transition-all bg-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5' : 'py-2.5 rounded-2xl text-[11px] font-black transition-all text-slate-500 flex items-center justify-center gap-1.5';
-            if(bInc) bInc.className = !isExp ? 'py-2.5 rounded-2xl text-[11px] font-black transition-all bg-white text-emerald-600 shadow-sm flex items-center justify-center gap-1.5' : 'py-2.5 rounded-2xl text-[11px] font-black transition-all text-slate-500 flex items-center justify-center gap-1.5';
+            if(bExp) bExp.className = isExp ? 'py-2.5 rounded-2xl text-xs font-black transition-all bg-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5' : 'py-2.5 rounded-2xl text-xs font-black transition-all text-slate-500 flex items-center justify-center gap-1.5';
+            if(bInc) bInc.className = !isExp ? 'py-2.5 rounded-2xl text-xs font-black transition-all bg-white text-emerald-600 shadow-sm flex items-center justify-center gap-1.5' : 'py-2.5 rounded-2xl text-xs font-black transition-all text-slate-500 flex items-center justify-center gap-1.5';
             const bgAcc = document.getElementById('input-bg-accent');
             if(bgAcc) bgAcc.className = `absolute top-0 right-0 w-16 h-16 ${isExp ? 'bg-slate-100' : 'bg-emerald-50'} rounded-full -mr-8 -mt-8 transition-all duration-700`;
             renderAddForm();
@@ -914,8 +913,8 @@
             state.inputCurrency = c;
             const bj = document.getElementById('btn-jpy');
             const bt = document.getElementById('btn-twd');
-            if(bj) bj.className = `currency-btn px-3 py-1.5 rounded-lg text-[9px] font-black transition-all ${c === 'JPY' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`;
-            if(bt) bt.className = `currency-btn px-3 py-1.5 rounded-lg text-[9px] font-black transition-all ${c === 'TWD' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`;
+            if(bj) bj.className = `currency-btn px-3 py-1.5 rounded-lg text-xs font-black transition-all ${c === 'JPY' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`;
+            if(bt) bt.className = `currency-btn px-3 py-1.5 rounded-lg text-xs font-black transition-all ${c === 'TWD' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`;
             safeUpdate('input-label', `金額紀錄 (${c})`);
             safeUpdate('currency-symbol', c === 'JPY' ? '¥' : '$');
             renderConversionHint();
@@ -935,7 +934,7 @@
 
         function changeDashboardMonth(val) { state.dashboardMonth = val; saveData(); renderDashboard(); updateChart(); }
         function changeHistoryDate(type, val) { if (type === 'day') state.historyDay = val; if (type === 'month') state.historyMonth = val; if (type === 'year') state.historyYear = val; saveData(); renderHistory(); }
-        function setFilter(f) { state.historyFilter = f; document.querySelectorAll('#history-filter button').forEach(b => b.className = `px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${b.id.includes(f) ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`); renderHistory(); }
+        function setFilter(f) { state.historyFilter = f; document.querySelectorAll('#history-filter button').forEach(b => b.className = `px-3 py-1.5 rounded-lg text-xs font-black uppercase transition-all ${b.id.includes(f) ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`); renderHistory(); }
         function setSelection(type, id) { if (type === 'cat') { if (state.inputType === 'expense') state.selectedCategory = id; else state.selectedIncomeCategory = id; } else state.selectedPayment = id; renderAddForm(); }
 
         function saveTransaction(event) {
@@ -981,7 +980,7 @@
         function renderSettings() {
             const renderList = (id, list, type) => {
                 const el = document.getElementById(id);
-                if (el) el.innerHTML = list.map(item => `<div class="bg-slate-50 p-2.5 px-4 rounded-xl flex justify-between items-center mb-1.5 shadow-inner border border-slate-100"><div class="flex items-center gap-2"><i data-lucide="${ICON_OPTIONS[item.icon].icon}" size="12" style="color: ${ICON_OPTIONS[item.icon].color}"></i><span class="text-[10px] font-black text-slate-700">${item.name}</span></div><div class="flex items-center gap-2"><button onclick="openEditModal('${type}', '${item.id}')"><i data-lucide="edit-3" size="12" class="text-slate-400"></i></button><button onclick="deleteItem('${type}', '${item.id}')"><i data-lucide="trash-2" size="12" class="text-slate-400"></i></button></div></div>`).join('');
+                if (el) el.innerHTML = list.map(item => `<div class="bg-slate-50 p-2.5 px-4 rounded-xl flex justify-between items-center mb-1.5 shadow-inner border border-slate-100"><div class="flex items-center gap-2"><i data-lucide="${ICON_OPTIONS[item.icon].icon}" size="12" style="color: ${ICON_OPTIONS[item.icon].color}"></i><span class="text-xs font-black text-slate-700">${item.name}</span></div><div class="flex items-center gap-2"><button onclick="openEditModal('${type}', '${item.id}')"><i data-lucide="edit-3" size="12" class="text-slate-400"></i></button><button onclick="deleteItem('${type}', '${item.id}')"><i data-lucide="trash-2" size="12" class="text-slate-400"></i></button></div></div>`).join('');
             };
             renderList('settings-cat-list', state.categories, 'cat');
             renderList('settings-inc-list', state.incomeCategories, 'inc');
