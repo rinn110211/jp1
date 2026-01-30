@@ -171,10 +171,10 @@
 
             <div class="grid grid-cols-2 bg-slate-200/50 p-1 rounded-[18px] shadow-inner">
                 <button onclick="setInputType('expense')" id="btn-type-expense" class="py-2.5 rounded-2xl text-[11px] font-black transition-all bg-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5">
-                    <i data-lucide="arrow-down-right" size="14"></i> 支出
+                    <i data-lucide="arrow-down-right" size="14"></i> 支出項目
                 </button>
                 <button onclick="setInputType('income')" id="btn-type-income" class="py-2.5 rounded-2xl text-[11px] font-black transition-all text-slate-500 flex items-center justify-center gap-1.5">
-                    <i data-lucide="arrow-up-right" size="14"></i> 收入
+                    <i data-lucide="arrow-up-right" size="14"></i> 收入來源
                 </button>
             </div>
 
@@ -250,7 +250,6 @@
 
         <!-- Initial Costs Tab -->
         <section id="tab-initial" class="tab-content space-y-4">
-            <!-- 初期費用統計 -->
             <div class="bg-white rounded-[1.8rem] p-5 border border-blue-50 shadow-sm relative overflow-hidden dynamic-card">
                 <div class="absolute -top-4 -right-4 p-4 text-blue-50 opacity-30 rotate-12"><i data-lucide="plane" size="80"></i></div>
                 <div class="flex justify-between items-center mb-1">
@@ -273,7 +272,6 @@
                 </div>
             </div>
 
-            <!-- 預算上限編輯卡片 -->
             <div class="bg-white p-3.5 rounded-2xl border border-blue-100 shadow-sm flex items-center justify-between">
                 <div>
                     <h4 class="text-[9px] font-black text-blue-500 uppercase tracking-widest">初期預算上限設定</h4>
@@ -288,7 +286,6 @@
                 </div>
             </div>
 
-            <!-- 大型支出表單 -->
             <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-md space-y-3">
                 <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">新增初期開支</h3>
                 <form onsubmit="saveInitialCost(event)" class="space-y-2">
@@ -312,7 +309,6 @@
                 </form>
             </div>
 
-            <!-- 清單項目 -->
             <div id="initial-costs-list" class="space-y-2 pb-20"></div>
         </section>
     </main>
@@ -329,7 +325,7 @@
         </button>
         <button onclick="switchTab('dashboard')" class="nav-btn flex flex-col items-center gap-1 text-slate-300 active" data-tab="dashboard">
             <i data-lucide="layout-dashboard" size="22"></i>
-            <span class="text-[9px] font-black tracking-widest uppercase">總覽</span>
+            <span class="text-[8px] font-black tracking-widest uppercase">總覽</span>
         </button>
         <button onclick="switchTab('initial')" class="nav-btn flex flex-col items-center gap-1 text-slate-300" data-tab="initial">
             <i data-lucide="calculator" size="22"></i>
@@ -346,7 +342,6 @@
             </div>
             
             <div class="space-y-5 max-h-[60vh] overflow-y-auto scrollbar-hide pr-1">
-                <!-- 備份區塊 -->
                 <section class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100">
                     <h3 class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-3">資料備份與還原</h3>
                     <div class="grid grid-cols-2 gap-2">
@@ -396,7 +391,7 @@
         </div>
     </div>
 
-    <!-- Edit Modal -->
+    <!-- Edit Modal (用於類別、帳戶) -->
     <div id="modal-edit" class="fixed inset-0 bg-slate-900/60 z-[70] hidden flex items-center justify-center p-6 backdrop-blur-sm">
         <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-7 shadow-2xl animate-in zoom-in duration-200">
             <div class="flex justify-between items-center mb-5">
@@ -407,6 +402,35 @@
                 <input id="edit-name" type="text" class="w-full bg-slate-50 border-none rounded-2xl p-4 font-black outline-none shadow-inner text-slate-700 text-sm" placeholder="輸入名稱">
                 <div id="edit-icon-grid" class="grid grid-cols-5 gap-2.5 max-h-40 overflow-y-auto bg-slate-50 rounded-[1.8rem] p-4 scrollbar-hide border border-slate-100"></div>
                 <button onclick="saveItemEdit()" class="w-full bg-slate-900 text-white font-black py-4 rounded-2xl shadow-xl active:scale-95 transition-all text-sm">確認儲存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Edit Modal -->
+    <div id="modal-transaction-edit" class="fixed inset-0 bg-slate-900/60 z-[70] hidden flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-7 shadow-2xl animate-in zoom-in duration-200">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-base font-black text-slate-800 px-2">編輯交易明細</h3>
+                <button onclick="closeTransactionEditModal()" class="p-2 bg-slate-50 rounded-full text-slate-400"><i data-lucide="x" size="18"></i></button>
+            </div>
+            <div class="space-y-4 max-h-[70vh] overflow-y-auto scrollbar-hide p-1">
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">金額 (當前幣別)</label>
+                    <input type="number" id="edit-trans-amount" class="w-full bg-transparent border-none text-2xl font-black focus:ring-0 text-slate-800 outline-none" placeholder="0">
+                </div>
+                <div class="flex gap-2">
+                    <input type="date" id="edit-trans-date" class="flex-1 bg-slate-50 rounded-xl p-2.5 text-[10px] font-black outline-none border border-slate-100 text-slate-600">
+                    <input type="text" id="edit-trans-note" placeholder="備註..." class="flex-1 bg-slate-50 rounded-xl p-2.5 text-[10px] font-black outline-none border border-slate-100 text-slate-600">
+                </div>
+                <div class="space-y-1">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">分類</p>
+                    <div class="grid grid-cols-4 gap-2" id="edit-trans-cat-grid"></div>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">支付管道</p>
+                    <div class="grid grid-cols-3 gap-2" id="edit-trans-pay-grid"></div>
+                </div>
+                <button onclick="saveTransactionEdit()" class="w-full bg-slate-900 text-white font-black py-4 rounded-xl shadow-xl active:scale-95 transition-all text-sm mt-4">儲存變更</button>
             </div>
         </div>
     </div>
@@ -491,7 +515,10 @@
             historyYear: new Date().getFullYear().toString(),
             selectedCategory: DEFAULTS.categories[0].id,
             selectedIncomeCategory: DEFAULTS.incomeCategories[0].id,
-            selectedPayment: DEFAULTS.payments[0].id
+            selectedPayment: DEFAULTS.payments[0].id,
+            editingTransactionId: null,
+            editTransSelectedCategory: null,
+            editTransSelectedPayment: null
         };
 
         let myChart = null;
@@ -519,7 +546,6 @@
             }
         }
 
-        // 匯出資料為 JSON
         function exportData() {
             const dataStr = JSON.stringify(state, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
@@ -532,7 +558,6 @@
             URL.revokeObjectURL(url);
         }
 
-        // 匯入資料
         function importData(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -611,8 +636,8 @@
             if (catGrid) {
                 catGrid.innerHTML = list.map(cat => {
                     const active = currentSel === cat.id;
-                    const iconConfig = ICON_OPTIONS[cat.icon];
-                    return `<button type="button" onclick="setSelection('cat', '${cat.id}')" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-all dynamic-card ${active ? 'border-blue-50 bg-blue-50' : 'border-slate-100 bg-white shadow-sm'}"><i data-lucide="${iconConfig.icon}" size="18" style="color: ${iconConfig.color}"></i><span class="text-[8px] font-black truncate w-full text-center text-slate-500">${cat.name}</span></button>`;
+                    const config = ICON_OPTIONS[cat.icon];
+                    return `<button type="button" onclick="setSelection('cat', '${cat.id}')" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-all dynamic-card ${active ? 'border-blue-500 bg-blue-50' : 'border-slate-100 bg-white shadow-sm'}"><i data-lucide="${config.icon}" size="18" style="color: ${config.color}"></i><span class="text-[8px] font-black truncate w-full text-center text-slate-500">${cat.name}</span></button>`;
                 }).join('');
             }
 
@@ -620,8 +645,8 @@
             if (payGrid) {
                 payGrid.innerHTML = state.paymentMethods.map(pay => {
                     const active = state.selectedPayment === pay.id;
-                    const iconConfig = ICON_OPTIONS[pay.icon];
-                    return `<button type="button" onclick="setSelection('pay', '${pay.id}')" class="flex items-center justify-center gap-1.5 p-2 rounded-lg border transition-all text-[9px] font-black dynamic-card ${active ? 'bg-slate-900 text-white border-slate-900 shadow-md' : 'bg-white text-slate-400 border-slate-100'}"><i data-lucide="${iconConfig.icon}" size="10" style="color: ${active ? '#fff' : iconConfig.color}"></i><span class="truncate">${pay.name}</span></button>`;
+                    const config = ICON_OPTIONS[pay.icon];
+                    return `<button type="button" onclick="setSelection('pay', '${pay.id}')" class="flex items-center justify-center gap-1.5 p-2 rounded-lg border transition-all text-[9px] font-black dynamic-card ${active ? 'bg-slate-900 text-white border-slate-900 shadow-md' : 'bg-white text-slate-400 border-slate-100'}"><i data-lucide="${config.icon}" size="10" style="color: ${active ? '#fff' : config.color}"></i><span class="truncate">${pay.name}</span></button>`;
                 }).join('');
             }
             lucide.createIcons();
@@ -664,9 +689,19 @@
                             <div class="bg-white/80 p-2 rounded-xl"><i data-lucide="${config.icon}" size="16" style="color: ${config.color}"></i></div>
                             <div><h4 class="font-black text-slate-800 text-xs">${t.note || cat?.name}</h4><p class="text-[8px] text-slate-400 font-bold uppercase tracking-tighter">${pay?.name || '帳戶'} • ${t.date}</p></div>
                         </div>
-                        <div class="flex items-center gap-3 text-right">
-                            <div><p class="font-black ${t.type === 'income' ? 'income-text' : 'expense-text'} text-sm">${t.type === 'income' ? '+' : '-'}¥${t.amount.toLocaleString()}</p><p class="text-[8px] text-slate-400 font-bold">NT$ ${t.twd}</p></div>
-                            <button onclick="deleteRecord('${t.id}')" class="text-slate-300 p-1"><i data-lucide="trash-2" size="14"></i></button>
+                        <div class="flex items-center gap-2">
+                            <div class="text-right mr-2">
+                                <p class="font-black ${t.type === 'income' ? 'income-text' : 'expense-text'} text-sm">${t.type === 'income' ? '+' : '-'}¥${t.amount.toLocaleString()}</p>
+                                <p class="text-[8px] text-slate-400 font-bold">NT$ ${t.twd}</p>
+                            </div>
+                            <div class="flex flex-col gap-0.5 shrink-0">
+                                <button onclick="editRecord('${t.id}')" class="p-1.5 text-slate-300 hover:text-blue-500 transition-colors">
+                                    <i data-lucide="edit-3" size="14"></i>
+                                </button>
+                                <button onclick="deleteRecord('${t.id}')" class="p-1.5 text-slate-300 hover:text-red-500 transition-colors">
+                                    <i data-lucide="trash-2" size="14"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>`;
                 }).join('') || '<p class="text-center py-10 text-slate-300 text-xs font-black uppercase">暫無紀錄</p>';
@@ -719,6 +754,76 @@
                 }).join('');
             }
             lucide.createIcons();
+        }
+
+        function editRecord(id) {
+            const t = state.transactions.find(item => item.id === id);
+            if (!t) return;
+            state.editingTransactionId = id;
+            state.editTransSelectedCategory = t.category;
+            state.editTransSelectedPayment = t.payment;
+            
+            document.getElementById('edit-trans-amount').value = t.amount;
+            document.getElementById('edit-trans-date').value = t.date;
+            document.getElementById('edit-trans-note').value = t.note || '';
+            
+            renderEditTransactionGrids(t.type);
+            document.getElementById('modal-transaction-edit').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function renderEditTransactionGrids(type) {
+            const isExp = type === 'expense';
+            const catList = isExp ? state.categories : state.incomeCategories;
+            
+            const catGrid = document.getElementById('edit-trans-cat-grid');
+            catGrid.innerHTML = catList.map(cat => {
+                const active = state.editTransSelectedCategory === cat.id;
+                const config = ICON_OPTIONS[cat.icon];
+                return `<button type="button" onclick="setEditTransSelection('cat', '${cat.id}')" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-all ${active ? 'border-blue-500 bg-blue-50' : 'border-slate-100 bg-white shadow-sm'}"><i data-lucide="${config.icon}" size="16" style="color: ${config.color}"></i><span class="text-[7px] font-black truncate w-full text-center text-slate-500">${cat.name}</span></button>`;
+            }).join('');
+
+            const payGrid = document.getElementById('edit-trans-pay-grid');
+            payGrid.innerHTML = state.paymentMethods.map(pay => {
+                const active = state.editTransSelectedPayment === pay.id;
+                const config = ICON_OPTIONS[pay.icon];
+                return `<button type="button" onclick="setEditTransSelection('pay', '${pay.id}')" class="flex items-center justify-center gap-1 p-2 rounded-lg border transition-all text-[8px] font-bold ${active ? 'bg-slate-800 text-white border-slate-800 shadow-md' : 'bg-white text-slate-400 border-slate-100'}"><i data-lucide="${config.icon}" size="10" style="color: ${active ? '#fff' : config.color}"></i><span class="truncate ml-1">${pay.name}</span></button>`;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function setEditTransSelection(type, id) {
+            if (type === 'cat') state.editTransSelectedCategory = id;
+            if (type === 'pay') state.editTransSelectedPayment = id;
+            const t = state.transactions.find(item => item.id === state.editingTransactionId);
+            renderEditTransactionGrids(t.type);
+        }
+
+        function saveTransactionEdit() {
+            const id = state.editingTransactionId;
+            const tIndex = state.transactions.findIndex(item => item.id === id);
+            if (tIndex === -1) return;
+            const amount = parseFloat(document.getElementById('edit-trans-amount').value);
+            if (!amount || amount <= 0) return;
+            const twd = parseFloat((amount * state.exchangeRate).toFixed(1));
+            state.transactions[tIndex] = {
+                ...state.transactions[tIndex],
+                amount: Math.round(amount),
+                twd: twd,
+                date: document.getElementById('edit-trans-date').value,
+                note: document.getElementById('edit-trans-note').value,
+                category: state.editTransSelectedCategory,
+                payment: state.editTransSelectedPayment
+            };
+            saveData();
+            closeTransactionEditModal();
+            renderAll();
+            updateChart();
+        }
+
+        function closeTransactionEditModal() {
+            document.getElementById('modal-transaction-edit').classList.add('hidden');
+            state.editingTransactionId = null;
         }
 
         function updateInitialBudget(val) {
