@@ -98,6 +98,11 @@
             -webkit-appearance: none;
             margin: 0;
         }
+
+        .modal-backdrop {
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+        }
     </style>
 </head>
 <body class="max-w-md mx-auto flex flex-col bg-slate-50 border-x border-slate-100 shadow-2xl">
@@ -122,7 +127,7 @@
             <div class="flex justify-between items-center px-1">
                 <h2 class="text-lg font-black text-slate-800 tracking-tight">資產概覽</h2>
                 <div class="bg-white border border-slate-100 px-2 py-1 rounded-xl shadow-sm">
-                    <input type="month" id="dash-month-input" onchange="changeDashboardMonth(this.value)" class="text-xs font-bold text-blue-600 border-none bg-transparent outline-none cursor-pointer">
+                    <input type="month" id="dash-month-input" onchange="changeDashboardMonth(this.value)" class="text-[10px] font-bold text-blue-600 border-none bg-transparent outline-none cursor-pointer">
                 </div>
             </div>
 
@@ -131,22 +136,22 @@
                 <div class="absolute -top-6 -right-6 p-4 text-blue-100 opacity-20 rotate-12 transition-transform duration-1000">
                     <i data-lucide="wallet" size="120"></i>
                 </div>
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest relative z-10 opacity-70">預估剩餘資產 (含初期扣除)</p>
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest relative z-10 opacity-70">預估剩餘資產 (含初期扣除)</p>
                 <h2 id="dash-total-assets" class="text-3xl font-black mt-1 text-slate-800 tracking-tighter relative z-10">¥0</h2>
                 <div class="mt-4 flex justify-between items-center relative z-10">
-                    <span id="dash-total-twd" class="font-black text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl text-sm">≈ NT$ 0</span>
-                    <span id="dash-rate" class="text-[10px] font-bold text-slate-300">1 JPY = 0.215 TWD</span>
+                    <span id="dash-total-twd" class="font-black text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl text-xs">≈ NT$ 0</span>
+                    <span id="dash-rate" class="text-[9px] font-bold text-slate-300">1 JPY = 0.215 TWD</span>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
-                <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 shadow-sm text-center dynamic-card">
-                    <p class="text-[10px] text-emerald-600 font-black uppercase mb-0.5">該月收入</p>
-                    <p id="dash-month-income" class="font-black text-base text-emerald-700">¥0</p>
+                <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100 shadow-sm text-center dynamic-card">
+                    <p class="text-xs text-emerald-600 font-bold uppercase mb-0.5">該月收入</p>
+                    <p id="dash-month-income" class="font-black text-lg text-emerald-700">¥0</p>
                 </div>
-                <div class="bg-slate-100 p-4 rounded-2xl border border-slate-200 shadow-sm text-center dynamic-card">
-                    <p class="text-[10px] text-slate-500 font-black uppercase mb-0.5">該月支出</p>
-                    <p id="dash-month-expense" class="font-black text-base text-slate-800">¥0</p>
+                <div class="bg-slate-100/50 p-4 rounded-2xl border border-slate-200 shadow-sm text-center dynamic-card">
+                    <p class="text-xs text-slate-500 font-bold uppercase mb-0.5">該月支出</p>
+                    <p id="dash-month-expense" class="font-black text-lg text-slate-800">¥0</p>
                 </div>
             </div>
 
@@ -155,14 +160,14 @@
                 <div class="relative h-48 w-full flex justify-center">
                     <canvas id="expenseChart"></canvas>
                 </div>
-                <div id="chart-legend-empty" class="hidden text-center py-4 text-slate-300 text-[10px] font-bold italic">該月份目前無支出數據</div>
+                <div id="chart-legend-empty" class="hidden text-center py-4 text-slate-300 text-xs font-bold italic">該月份目前無支出數據</div>
             </div>
         </section>
 
         <!-- Add Tab -->
         <section id="tab-add" class="tab-content space-y-5">
             <div class="flex justify-between items-center px-1">
-                <h2 class="text-xl font-black text-slate-800">新增紀錄</h2>
+                <h2 class="text-xl font-black text-slate-800 text-sm">新增紀錄</h2>
                 <div class="bg-slate-200/50 p-1 rounded-xl flex gap-1 shadow-inner">
                     <button onclick="setInputCurrency('JPY')" id="btn-jpy" class="px-3 py-1.5 rounded-lg text-xs font-black transition-all bg-white text-blue-600 shadow-sm">JPY</button>
                     <button onclick="setInputCurrency('TWD')" id="btn-twd" class="px-3 py-1.5 rounded-lg text-xs font-black transition-all text-slate-500">TWD</button>
@@ -171,17 +176,17 @@
 
             <div class="grid grid-cols-2 bg-slate-200/50 p-1 rounded-[18px] shadow-inner">
                 <button onclick="setInputType('expense')" id="btn-type-expense" class="py-2.5 rounded-2xl text-xs font-black transition-all bg-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5">
-                    <i data-lucide="arrow-down-right" size="14"></i> 支出項目
+                    <i data-lucide="arrow-down-right" size="14"></i> 支出
                 </button>
                 <button onclick="setInputType('income')" id="btn-type-income" class="py-2.5 rounded-2xl text-xs font-black transition-all text-slate-500 flex items-center justify-center gap-1.5">
-                    <i data-lucide="arrow-up-right" size="14"></i> 收入來源
+                    <i data-lucide="arrow-up-right" size="14"></i> 收入
                 </button>
             </div>
 
             <form onsubmit="saveTransaction(event)" class="space-y-4">
                 <div class="bg-white p-5 rounded-2xl shadow-lg border border-blue-50 relative overflow-hidden">
                     <div id="input-bg-accent" class="absolute top-0 right-0 w-16 h-16 bg-slate-100 rounded-full -mr-8 -mt-8 transition-all duration-700"></div>
-                    <label id="input-label" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest relative z-10">金額紀錄</label>
+                    <label id="input-label" class="text-xs font-bold text-slate-400 uppercase tracking-widest relative z-10">金額紀錄</label>
                     <div class="flex items-center mt-1 border-b border-slate-100 pb-1 focus-within:border-blue-500 relative z-10 transition-colors">
                         <span id="currency-symbol" class="text-xl font-black text-slate-300">¥</span>
                         <input type="number" step="any" id="input-amount" class="w-full bg-transparent border-none text-3xl font-black focus:ring-0 ml-1 text-slate-800 outline-none" placeholder="0">
@@ -199,12 +204,12 @@
                 </div>
 
                 <div class="space-y-2">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">分類</p>
+                    <p class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">分類</p>
                     <div class="grid grid-cols-4 gap-2" id="add-category-grid"></div>
                 </div>
 
                 <div class="space-y-2">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">支付管道</p>
+                    <p class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">支付管道</p>
                     <div class="grid grid-cols-3 gap-2" id="add-payment-grid"></div>
                 </div>
 
@@ -217,7 +222,7 @@
         <!-- History Tab -->
         <section id="tab-history" class="tab-content space-y-4">
             <div class="flex justify-between items-center px-1">
-                <h2 class="text-xl font-black text-slate-800">歷史明細</h2>
+                <h2 class="text-xl font-black text-slate-800 text-sm">歷史明細</h2>
                 <div class="flex bg-slate-200/50 p-1 rounded-xl shadow-inner" id="history-filter">
                     <button onclick="setFilter('day')" id="filter-day" class="px-3 py-1 rounded-lg text-xs font-black uppercase transition-all text-slate-500">本日</button>
                     <button onclick="setFilter('month')" id="filter-month" class="px-3 py-1 rounded-lg text-xs font-black uppercase transition-all bg-white text-blue-600 shadow-sm">本月</button>
@@ -226,22 +231,22 @@
             </div>
 
             <div class="glass-effect p-3 px-4 rounded-2xl flex items-center justify-between shadow-sm">
-                <span id="date-selector-label" class="text-[10px] font-black text-slate-400 uppercase">篩選範圍</span>
+                <span id="date-selector-label" class="text-xs font-black text-slate-400 uppercase">篩選範圍</span>
                 <div id="date-input-wrapper" class="font-bold text-blue-600 text-sm"></div>
             </div>
 
             <div class="bg-white p-5 rounded-[1.8rem] border border-slate-100 shadow-sm space-y-2">
                 <div class="flex justify-between items-center">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase">區間收入合計</span>
+                    <span class="text-xs font-bold text-slate-400 uppercase">區間收入合計</span>
                     <span id="history-period-income" class="text-emerald-600 font-black text-sm">¥0</span>
                 </div>
                 <div class="flex justify-between items-center border-t border-slate-50 pt-2">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase">區間支出合計</span>
+                    <span class="text-xs font-bold text-slate-400 uppercase">區間支出合計</span>
                     <span id="history-period-expense" class="text-slate-700 font-black text-sm">¥0</span>
                 </div>
                 <div class="flex justify-between items-center border-t-2 border-blue-50 pt-2 mt-1">
-                    <span class="text-[10px] font-black text-slate-800 uppercase">區間總損益</span>
-                    <span id="history-period-balance" class="text-blue-600 font-black text-base">¥0</span>
+                    <span class="text-xs font-black text-slate-800 uppercase">區間總損益</span>
+                    <span id="history-period-balance" class="text-blue-600 font-black text-lg">¥0</span>
                 </div>
             </div>
 
@@ -250,37 +255,37 @@
 
         <!-- Initial Costs Tab -->
         <section id="tab-initial" class="tab-content space-y-4">
-            <!-- 初期費用統計 (含預算合計) -->
+            <!-- 初期費用統計 -->
             <div class="bg-white rounded-[1.8rem] p-5 border border-blue-50 shadow-sm relative overflow-hidden dynamic-card">
                 <div class="absolute -top-4 -right-4 p-4 text-blue-50 opacity-30 rotate-12"><i data-lucide="plane" size="80"></i></div>
                 <div class="grid grid-cols-2 gap-4 mb-2 relative z-10">
                     <div>
-                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">實際總開銷</p>
-                        <h2 id="init-total-display" class="text-2xl font-black text-slate-800">¥0</h2>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-widest leading-none">實際總開銷</p>
+                        <h2 id="init-total-display" class="text-2xl font-black text-slate-800 mt-1">¥0</h2>
                     </div>
                     <div class="text-right">
-                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">項目預算合計</p>
-                        <h2 id="init-budget-sum-display" class="text-xl font-black text-slate-500">¥0</h2>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-widest leading-none">項目預算合計</p>
+                        <h2 id="init-budget-sum-display" class="text-xl font-black text-slate-500 mt-1">¥0</h2>
                     </div>
                 </div>
-                <div class="flex justify-between items-center mb-1 relative z-10">
-                    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">剩餘總預算</p>
+                <div class="flex justify-between items-center mb-1 relative z-10 border-t border-slate-50 pt-2">
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">剩餘可用預算</p>
                     <h2 id="init-rem-display" class="text-lg font-black text-blue-600">¥0</h2>
                 </div>
                 
                 <div class="mt-3 relative h-1.5 bg-slate-100 rounded-full overflow-hidden z-10">
                     <div id="init-progress-bar" class="h-full bg-blue-600 transition-all duration-1000 rounded-full" style="width: 0%"></div>
                 </div>
-                <div class="flex justify-between mt-1.5 text-[10px] font-black uppercase text-slate-400 relative z-10">
-                    <span>預算進度</span>
+                <div class="flex justify-between mt-1.5 text-xs font-black uppercase text-slate-400 relative z-10">
+                    <span>進度</span>
                     <span id="init-progress-text" class="text-blue-600 font-bold">0%</span>
                 </div>
             </div>
 
-            <!-- 預算上限編輯小卡片 -->
+            <!-- 預算上限編輯 -->
             <div class="bg-white p-3.5 rounded-2xl border border-blue-100 shadow-sm flex items-center justify-between">
                 <div>
-                    <h4 class="text-[10px] font-black text-blue-500 uppercase tracking-widest">初期總預算上限設定</h4>
+                    <h4 class="text-xs font-black text-blue-500 uppercase tracking-widest">初期總預算上限設定</h4>
                     <div class="flex items-center gap-1 mt-0.5">
                         <span class="text-sm font-black text-slate-700">¥</span>
                         <input type="number" id="init-budget-input" oninput="updateInitialBudget(this.value)" class="w-16 bg-slate-50 border-none rounded-lg p-1 text-sm font-black text-blue-600 outline-none" placeholder="0">
@@ -294,7 +299,7 @@
 
             <!-- 大型支出表單 -->
             <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-md space-y-3">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">新增初期大型支出</h3>
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">新增初期大型支出</h3>
                 <form onsubmit="saveInitialCost(event)" class="space-y-2">
                     <div class="grid grid-cols-2 gap-2">
                         <input type="text" id="init-input-name" placeholder="項目" class="w-full bg-slate-50 border-none rounded-lg p-2.5 text-xs font-black outline-none focus:ring-1 focus:ring-blue-100 transition-all">
@@ -303,11 +308,11 @@
                     <div class="flex gap-2">
                         <div class="flex-1 flex items-center bg-slate-50 rounded-lg px-2 border border-slate-100">
                             <span class="text-[10px] font-bold text-slate-400 mr-1 shrink-0">預算</span>
-                            <input type="number" id="init-input-budget" placeholder="¥" class="w-full bg-transparent p-1.5 text-xs font-black outline-none">
+                            <input type="number" id="init-input-budget" placeholder="¥" class="w-full bg-transparent p-1.5 text-sm font-black outline-none">
                         </div>
                         <div class="flex-1 flex items-center bg-slate-50 rounded-lg px-2 border border-slate-100">
                             <span class="text-[10px] font-bold text-slate-400 mr-1 shrink-0">實際</span>
-                            <input type="number" id="init-input-actual" placeholder="¥" class="w-full bg-transparent p-1.5 text-xs font-black outline-none">
+                            <input type="number" id="init-input-actual" placeholder="¥" class="w-full bg-transparent p-1.5 text-sm font-black outline-none">
                         </div>
                         <button type="submit" class="bg-slate-900 text-white px-4 rounded-lg font-black shadow-lg active:scale-90 transition-all">
                             <i data-lucide="plus" size="16"></i>
@@ -316,8 +321,7 @@
                 </form>
             </div>
 
-            <!-- 清單項目 (優化閱讀性與排版) -->
-            <div id="initial-costs-list" class="space-y-2 pb-20"></div>
+            <div id="initial-costs-list" class="space-y-2 pb-24"></div>
         </section>
     </main>
 
@@ -363,7 +367,7 @@
                         </button>
                     </div>
                     <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
-                    <p class="text-[10px] text-slate-400 mt-2 leading-tight">💡 建議每月將資料匯出儲存於 Google Drive，以防快取被清空。</p>
+                    <p class="text-xs text-slate-400 mt-2 leading-tight">💡 建議定期備份，以防瀏覽器快取被清除。</p>
                 </section>
 
                 <section>
@@ -394,16 +398,31 @@
                     </div>
                     <div id="settings-pay-list" class="space-y-1.5"></div>
                 </section>
-                <button onclick="resetApp()" class="w-full text-red-400 text-xs font-black py-4 bg-red-50 rounded-2xl tracking-widest uppercase hover:bg-red-100 transition-colors mt-4">清除所有資料</button>
+                <button onclick="confirmResetApp()" class="w-full text-red-400 text-xs font-black py-4 bg-red-50 rounded-2xl tracking-widest uppercase hover:bg-red-100 transition-colors mt-4">清除所有資料</button>
             </div>
         </div>
     </div>
 
-    <!-- Edit Modal (用於類別、帳戶) -->
+    <!-- Confirm Dialog (取代 confirm() ) -->
+    <div id="modal-confirm" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 modal-backdrop">
+        <div class="bg-white w-full max-w-xs rounded-[2rem] p-6 shadow-2xl text-center animate-in zoom-in duration-200">
+            <div class="w-12 h-12 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="alert-triangle" size="24"></i>
+            </div>
+            <h3 id="confirm-title" class="text-base font-black text-slate-800 mb-1">確定執行？</h3>
+            <p id="confirm-msg" class="text-xs font-bold text-slate-400 mb-6">此動作執行後將無法還原。</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="closeConfirm()" class="py-3 bg-slate-100 text-slate-500 font-black rounded-xl text-xs">取消</button>
+                <button id="confirm-execute" class="py-3 bg-slate-900 text-white font-black rounded-xl text-xs">確定刪除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Item Modal -->
     <div id="modal-edit" class="fixed inset-0 bg-slate-900/60 z-[70] hidden flex items-center justify-center p-6 backdrop-blur-sm">
         <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-7 shadow-2xl animate-in zoom-in duration-200">
             <div class="flex justify-between items-center mb-5">
-                <h3 id="edit-modal-title" class="text-base font-black text-slate-800 px-2">編輯</h3>
+                <h3 id="edit-modal-title" class="text-base font-black text-slate-800 px-2">編輯項目</h3>
                 <button onclick="closeEditModal()" class="p-2 bg-slate-50 rounded-full text-slate-400"><i data-lucide="x" size="18"></i></button>
             </div>
             <div class="space-y-6">
@@ -447,12 +466,12 @@
     <div id="modal-initial-edit" class="fixed inset-0 bg-slate-900/60 z-[70] hidden flex items-center justify-center p-6 backdrop-blur-sm">
         <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-7 shadow-2xl animate-in zoom-in duration-200">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-base font-black text-slate-800 px-2">編輯初期大項支出</h3>
+                <h3 class="text-base font-black text-slate-800 px-2">編輯初期開支</h3>
                 <button onclick="closeInitialEditModal()" class="p-2 bg-slate-50 rounded-full text-slate-400"><i data-lucide="x" size="18"></i></button>
             </div>
             <div class="space-y-4">
                 <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 space-y-3">
-                    <input type="text" id="edit-init-name" placeholder="項目名稱" class="w-full bg-white border-none rounded-xl p-3 text-xs font-black outline-none shadow-sm">
+                    <input type="text" id="edit-init-name" placeholder="項目名稱" class="w-full bg-white border-none rounded-xl p-3 text-sm font-black outline-none shadow-sm">
                     <input type="text" id="edit-init-note" placeholder="詳細備註" class="w-full bg-white border-none rounded-xl p-3 text-xs font-black outline-none shadow-sm">
                     <div class="flex gap-2">
                         <div class="flex-1 bg-white p-2 rounded-xl shadow-sm border border-slate-100">
@@ -501,17 +520,12 @@
                 { id: 'c5', name: '學習書籍', icon: 'BookOpen' },
                 { id: 'c6', name: '藥妝保養', icon: 'Heart' },
                 { id: 'c7', name: '百元商店', icon: 'Construction' },
-                { id: 'c8', name: '生活用品', icon: 'Coins' },
-                { id: 'c9', name: '通訊網費', icon: 'Wifi' },
-                { id: 'c10', name: '娛樂興趣', icon: 'Coffee' },
-                { id: 'c11', name: '醫療保險', icon: 'Stethoscope' },
-                { id: 'c12', name: '衣物飾品', icon: 'Shirt' }
+                { id: 'c8', name: '生活用品', icon: 'Coins' }
             ],
             incomeCategories: [
                 { id: 'i1', name: '獎學金', icon: 'BookOpen' },
                 { id: 'i2', name: '零用錢', icon: 'Wallet' },
-                { id: 'i3', name: '薪資收入', icon: 'Coins' },
-                { id: 'i4', name: '其他收入', icon: 'Ticket' }
+                { id: 'i3', name: '薪資收入', icon: 'Coins' }
             ],
             payments: [
                 { id: 'p1', name: '台幣帳戶', icon: 'Wallet' },
@@ -519,22 +533,18 @@
                 { id: 'p3', name: '日幣現金', icon: 'Coins' },
                 { id: 'p4', name: 'PayPay', icon: 'Smartphone' },
                 { id: 'p5', name: 'Suica', icon: 'Ticket' },
-                { id: 'p6', name: '信用卡1', icon: 'CreditCard' },
-                { id: 'p7', name: '信用卡2', icon: 'CreditCard' },
-                { id: 'p8', name: '信用卡3', icon: 'CreditCard' }
+                { id: 'p6', name: '信用卡1', icon: 'CreditCard' }
             ],
             initialCostsDefault: [
-                { id: 'd1', name: '語言學校學費', budget: 800000, actual: 820000, note: '半年份學費含雜費' },
-                { id: 'd2', name: '租房首付', budget: 300000, actual: 285000, note: '押金、禮金、仲介費' },
-                { id: 'd3', name: '日本單程機票', budget: 15000, actual: 12500, note: '單程機票含托運' },
-                { id: 'd4', name: '家具家電組', budget: 100000, actual: 110000, note: '冰箱、洗衣機、微波爐' }
+                { id: 'd1', name: '語言學校學費', budget: 800000, actual: 820000, note: '半年份學費' },
+                { id: 'd2', name: '租房首付', budget: 300000, actual: 285000, note: '押金禮金' }
             ]
         };
 
         let state = {
             transactions: [],
             initialCosts: [...DEFAULTS.initialCostsDefault],
-            initialBudget: 0,
+            initialBudget: 1500000,
             exchangeRate: 0.215,
             categories: [...DEFAULTS.categories],
             incomeCategories: [...DEFAULTS.incomeCategories],
@@ -549,69 +559,43 @@
             historyYear: new Date().getFullYear().toString(),
             selectedCategory: DEFAULTS.categories[0].id,
             selectedIncomeCategory: DEFAULTS.incomeCategories[0].id,
-            selectedPayment: DEFAULTS.payments[0].id,
-            editingTransactionId: null,
-            editingInitialId: null,
-            editTransSelectedCategory: null,
-            editTransSelectedPayment: null
+            selectedPayment: DEFAULTS.payments[0].id
         };
 
         let myChart = null;
 
-        function safeUpdate(id, text) {
-            const el = document.getElementById(id);
-            if (el) el.innerText = text;
-        }
-
-        function hexToRgba(hex, alpha) {
-            const r = parseInt(hex.slice(1, 3), 16);
-            const g = parseInt(hex.slice(3, 5), 16);
-            const b = parseInt(hex.slice(5, 7), 16);
-            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-        }
-
+        // --- Core Functions ---
         function saveData() { localStorage.setItem('jp_v17_data', JSON.stringify(state)); }
-        
         function loadData() {
             const saved = localStorage.getItem('jp_v17_data');
             if (saved) {
-                try {
-                    state = { ...state, ...JSON.parse(saved) };
-                } catch(e) { console.error("Load failed", e); }
+                try { state = { ...state, ...JSON.parse(saved) }; } catch(e) { console.error("Load failed", e); }
             }
         }
 
-        function exportData() {
-            const dataStr = JSON.stringify(state, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            const date = new Date().toISOString().split('T')[0];
-            link.href = url;
-            link.download = `JapanExpense_Backup_${date}.json`;
-            link.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const importedState = JSON.parse(e.target.result);
-                    if (confirm('確定要覆蓋現有資料嗎？此操作無法還原。')) {
-                        state = { ...state, ...importedState };
-                        saveData();
-                        window.location.reload();
-                    }
-                } catch (err) {
-                    alert('匯入失敗：無效的備份檔案格式。');
-                }
+        // --- Confirm Dialog Helper ---
+        function openConfirm(title, msg, onConfirm) {
+            const modal = document.getElementById('modal-confirm');
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-msg').innerText = msg;
+            const execBtn = document.getElementById('confirm-execute');
+            
+            // 替換確認按鈕的點擊事件
+            const newExecBtn = execBtn.cloneNode(true);
+            execBtn.parentNode.replaceChild(newExecBtn, execBtn);
+            
+            newExecBtn.onclick = () => {
+                onConfirm();
+                closeConfirm();
             };
-            reader.readAsText(file);
+            modal.classList.remove('hidden');
         }
 
+        function closeConfirm() {
+            document.getElementById('modal-confirm').classList.add('hidden');
+        }
+
+        // --- Renderers ---
         function renderAll() {
             renderDashboard();
             renderAddForm();
@@ -647,18 +631,18 @@
                 return { name: cat.name, total, color: ICON_OPTIONS[cat.icon].color };
             }).filter(d => d.total > 0);
 
+            if (myChart) myChart.destroy();
             const legendEmpty = document.getElementById('chart-legend-empty');
             if (legendEmpty) legendEmpty.classList.toggle('hidden', categoryData.length > 0);
-            if (myChart) myChart.destroy();
             if (categoryData.length === 0) return;
 
             myChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: categoryData.map(d => d.name),
-                    datasets: [{ data: categoryData.map(d => d.total), backgroundColor: categoryData.map(d => d.color), borderWidth: 4, borderColor: '#ffffff', hoverOffset: 12 }]
+                    datasets: [{ data: categoryData.map(d => d.total), backgroundColor: categoryData.map(d => d.color), borderWidth: 4, borderColor: '#ffffff' }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 6, padding: 15, font: { size: 9, weight: 'bold' } } } } }
+                options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 6, font: { size: 9, weight: 'bold' } } } } }
             });
         }
 
@@ -692,18 +676,12 @@
             if (!wrap) return;
             if (state.historyFilter === 'day') wrap.innerHTML = `<input type="date" value="${state.historyDay}" onchange="changeHistoryDate('day', this.value)" class="bg-transparent outline-none">`;
             else if (state.historyFilter === 'month') wrap.innerHTML = `<input type="month" value="${state.historyMonth}" onchange="changeHistoryDate('month', this.value)" class="bg-transparent outline-none">`;
-            else {
-                let years = [...new Set(state.transactions.map(e => e.date.split('-')[0]))];
-                const currentYear = new Date().getFullYear().toString();
-                if (!years.includes(currentYear)) years.push(currentYear);
-                years.sort((a,b) => b-a);
-                wrap.innerHTML = `<select onchange="changeHistoryDate('year', this.value)" class="bg-transparent outline-none">${years.map(y => `<option value="${y}" ${y === state.historyYear ? 'selected' : ''}>${y} 年</option>`).join('')}</select>`;
-            }
+            else wrap.innerHTML = `<span class="uppercase">全部紀錄</span>`;
 
             const filtered = state.transactions.filter(e => {
                 if (state.historyFilter === 'day') return e.date === state.historyDay;
                 if (state.historyFilter === 'month') return e.date.startsWith(state.historyMonth);
-                return e.date.startsWith(state.historyYear);
+                return true;
             });
 
             const inc = filtered.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
@@ -722,11 +700,11 @@
                     return `<div class="p-2.5 px-4 rounded-[1.2rem] flex items-center justify-between shadow-sm dynamic-card border border-white" style="background-color: ${hexToRgba(config.color, 0.05)}; border-left: 4px solid ${config.color}">
                         <div class="flex items-center gap-3">
                             <div class="bg-white/90 p-2 rounded-xl"><i data-lucide="${config.icon}" size="14" style="color: ${config.color}"></i></div>
-                            <div><h4 class="font-black text-slate-800 text-[13px] leading-tight">${t.note || cat?.name}</h4><p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">${pay?.name || '帳戶'} • ${t.date}</p></div>
+                            <div><h4 class="font-black text-slate-800 text-[12px] leading-tight">${t.note || cat?.name}</h4><p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">${pay?.name || '帳戶'} • ${t.date}</p></div>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="text-right mr-1">
-                                <p class="font-black ${t.type === 'income' ? 'income-text' : 'expense-text'} text-[14px] leading-none">${t.type === 'income' ? '+' : '-'}¥${t.amount.toLocaleString()}</p>
+                                <p class="font-black ${t.type === 'income' ? 'income-text' : 'expense-text'} text-[13px] leading-none">${t.type === 'income' ? '+' : '-'}¥${t.amount.toLocaleString()}</p>
                                 <p class="text-[10px] text-slate-400 font-bold mt-1">NT$ ${t.twd.toLocaleString()}</p>
                             </div>
                             <div class="flex flex-col gap-1 shrink-0">
@@ -742,18 +720,15 @@
 
         function renderInitialCosts() {
             const totalActual = state.initialCosts.reduce((s, e) => s + e.actual, 0);
-            const totalBudget = state.initialCosts.reduce((s, e) => s + e.budget, 0);
+            const totalBudgetSum = state.initialCosts.reduce((s, e) => s + e.budget, 0);
             const budgetLimit = state.initialBudget || 0;
             const remaining = budgetLimit - totalActual;
             const progress = budgetLimit > 0 ? Math.min((totalActual / budgetLimit) * 100, 100) : 0;
             
             safeUpdate('init-total-display', `¥${totalActual.toLocaleString()}`);
-            safeUpdate('init-budget-sum-display', `¥${totalBudget.toLocaleString()}`);
+            safeUpdate('init-budget-sum-display', `¥${totalBudgetSum.toLocaleString()}`);
             safeUpdate('init-rem-display', `¥${remaining.toLocaleString()}`);
             
-            const bInput = document.getElementById('init-budget-input');
-            if(bInput) bInput.value = budgetLimit / 10000;
-
             const bar = document.getElementById('init-progress-bar');
             if (bar) bar.style.width = `${progress}%`;
             safeUpdate('init-progress-text', `${progress.toFixed(1)}%`);
@@ -763,28 +738,20 @@
                 list.innerHTML = state.initialCosts.map(item => {
                     const isOver = item.actual > item.budget;
                     const statusColor = isOver ? "#ef4444" : "#3b82f6";
-                    const bg = hexToRgba(statusColor, 0.04);
-
-                    return `
-                    <div class="p-3 px-5 rounded-2xl border border-white shadow-sm dynamic-card flex flex-col gap-1.5" style="background-color: ${bg}; border-left: 4px solid ${statusColor}">
+                    return `<div class="p-2.5 px-4 rounded-2xl border border-white shadow-sm dynamic-card flex flex-col gap-1" style="background-color: ${hexToRgba(statusColor, 0.04)}; border-left: 4px solid ${statusColor}">
                         <div class="flex justify-between items-start">
                             <div class="flex-1 overflow-hidden">
-                                <span class="font-black text-sm text-slate-800 leading-none truncate block">${item.name}</span>
-                                <p class="text-xs text-slate-400 font-bold leading-tight truncate mt-1.5">${item.note || '無詳細內容'}</p>
+                                <span class="font-black text-[13px] text-slate-800 leading-none truncate block">${item.name}</span>
+                                <p class="text-[11px] text-slate-400 font-bold leading-tight truncate mt-1.5">${item.note || '無備註'}</p>
                             </div>
                             <div class="flex gap-2 ml-2">
                                 <button onclick="editInitialCost('${item.id}')" class="text-slate-200 hover:text-blue-500"><i data-lucide="edit-3" size="14"></i></button>
                                 <button onclick="deleteInitial('${item.id}')" class="text-slate-200 hover:text-red-400"><i data-lucide="trash-2" size="14"></i></button>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center mt-0.5">
-                            <div class="text-xs font-black uppercase text-slate-400 opacity-60">
-                                預算 ¥${item.budget.toLocaleString()}
-                            </div>
-                            <div class="text-right">
-                                <span class="text-xs font-bold text-slate-400 mr-0.5 uppercase">實際</span>
-                                <span class="font-black text-slate-700 text-sm">¥${item.actual.toLocaleString()}</span>
-                            </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="text-[10px] font-black uppercase text-slate-400 opacity-60">預算 ¥${item.budget.toLocaleString()}</span>
+                            <span class="font-black text-slate-700 text-[13px]">實際 ¥${item.actual.toLocaleString()}</span>
                         </div>
                     </div>`;
                 }).join('');
@@ -792,204 +759,128 @@
             lucide.createIcons();
         }
 
-        function editRecord(id) {
-            const t = state.transactions.find(item => item.id === id);
-            if (!t) return;
-            state.editingTransactionId = id;
-            state.editTransSelectedCategory = t.category;
-            state.editTransSelectedPayment = t.payment;
-            document.getElementById('edit-trans-amount').value = t.amount;
-            document.getElementById('edit-trans-date').value = t.date;
-            document.getElementById('edit-trans-note').value = t.note || '';
-            renderEditTransactionGrids(t.type);
-            document.getElementById('modal-transaction-edit').classList.remove('hidden');
-            lucide.createIcons();
-        }
-
-        function renderEditTransactionGrids(type) {
-            const isExp = type === 'expense';
-            const catList = isExp ? state.categories : state.incomeCategories;
-            const catGrid = document.getElementById('edit-trans-cat-grid');
-            catGrid.innerHTML = catList.map(cat => {
-                const active = state.editTransSelectedCategory === cat.id;
-                const config = ICON_OPTIONS[cat.icon];
-                return `<button type="button" onclick="setEditTransSelection('cat', '${cat.id}')" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-all ${active ? 'border-blue-500 bg-blue-50' : 'border-slate-100 bg-white shadow-sm'}"><i data-lucide="${config.icon}" size="16" style="color: ${config.color}"></i><span class="text-[10px] font-black truncate w-full text-center text-slate-500 leading-tight">${cat.name}</span></button>`;
-            }).join('');
-            const payGrid = document.getElementById('edit-trans-pay-grid');
-            payGrid.innerHTML = state.paymentMethods.map(pay => {
-                const active = state.editTransSelectedPayment === pay.id;
-                const config = ICON_OPTIONS[pay.icon];
-                return `<button type="button" onclick="setEditTransSelection('pay', '${pay.id}')" class="flex items-center justify-center gap-1 p-2 rounded-lg border transition-all text-[10px] font-bold ${active ? 'bg-slate-800 text-white border-slate-800 shadow-md' : 'bg-white text-slate-400 border-slate-100'}"><i data-lucide="${config.icon}" size="10" style="color: ${active ? '#fff' : config.color}"></i><span class="truncate ml-1">${pay.name}</span></button>`;
-            }).join('');
-            lucide.createIcons();
-        }
-
-        function setEditTransSelection(type, id) {
-            if (type === 'cat') state.editTransSelectedCategory = id;
-            if (type === 'pay') state.editTransSelectedPayment = id;
-            const t = state.transactions.find(item => item.id === state.editingTransactionId);
-            renderEditTransactionGrids(t.type);
-        }
-
-        function saveTransactionEdit() {
-            const id = state.editingTransactionId;
-            const tIndex = state.transactions.findIndex(item => item.id === id);
-            if (tIndex === -1) return;
-            const amount = parseFloat(document.getElementById('edit-trans-amount').value);
-            if (!amount || amount <= 0) return;
-            const twd = parseFloat((amount * state.exchangeRate).toFixed(1));
-            state.transactions[tIndex] = {
-                ...state.transactions[tIndex],
-                amount: Math.round(amount),
-                twd: twd,
-                date: document.getElementById('edit-trans-date').value,
-                note: document.getElementById('edit-trans-note').value,
-                category: state.editTransSelectedCategory,
-                payment: state.editTransSelectedPayment
-            };
-            saveData();
-            closeTransactionEditModal();
-            renderAll();
-            updateChart();
-        }
-
-        function closeTransactionEditModal() { document.getElementById('modal-transaction-edit').classList.add('hidden'); state.editingTransactionId = null; }
-
-        function editInitialCost(id) {
-            const item = state.initialCosts.find(i => i.id === id);
-            if (!item) return;
-            state.editingInitialId = id;
-            document.getElementById('edit-init-name').value = item.name;
-            document.getElementById('edit-init-note').value = item.note || '';
-            document.getElementById('edit-init-budget').value = item.budget;
-            document.getElementById('edit-init-actual').value = item.actual;
-            document.getElementById('modal-initial-edit').classList.remove('hidden');
-        }
-
-        function saveInitialEdit() {
-            const id = state.editingInitialId;
-            const idx = state.initialCosts.findIndex(i => i.id === id);
-            if (idx === -1) return;
-            state.initialCosts[idx] = {
-                ...state.initialCosts[idx],
-                name: document.getElementById('edit-init-name').value,
-                note: document.getElementById('edit-init-note').value,
-                budget: parseFloat(document.getElementById('edit-init-budget').value) || 0,
-                actual: parseFloat(document.getElementById('edit-init-actual').value) || 0
-            };
-            saveData();
-            closeInitialEditModal();
-            renderAll();
-        }
-
-        function closeInitialEditModal() { document.getElementById('modal-initial-edit').classList.add('hidden'); state.editingInitialId = null; }
-
-        function updateInitialBudget(val) {
-            const parsed = parseFloat(val);
-            if (!isNaN(parsed)) {
-                state.initialBudget = parsed * 10000;
+        // --- Event Handlers ---
+        function deleteRecord(id) {
+            openConfirm('刪除紀錄', '確定要刪除這筆交易明細嗎？', () => {
+                state.transactions = state.transactions.filter(t => t.id !== id);
                 saveData();
-                renderInitialCosts();
-                renderDashboard();
-            }
+                renderAll();
+                updateChart();
+            });
         }
 
-        function switchTab(tabId) {
-            state.activeTab = tabId;
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            const content = document.getElementById(`tab-${tabId}`);
-            if (content) content.classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId));
-            const scrollArea = document.getElementById('scroll-area');
-            if (scrollArea) scrollArea.scrollTop = 0;
-            renderAll();
-            if (tabId === 'dashboard') setTimeout(updateChart, 100);
+        function deleteInitial(id) {
+            openConfirm('移除開支', '確定要移除此項初期費用嗎？', () => {
+                state.initialCosts = state.initialCosts.filter(i => i.id !== id);
+                saveData();
+                renderAll();
+            });
         }
 
-        function setInputType(type) {
-            state.inputType = type;
-            const isExp = type === 'expense';
-            const bExp = document.getElementById('btn-type-expense');
-            const bInc = document.getElementById('btn-type-income');
-            if(bExp) bExp.className = isExp ? 'py-2.5 rounded-2xl text-xs font-black transition-all bg-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5' : 'py-2.5 rounded-2xl text-xs font-black transition-all text-slate-500 flex items-center justify-center gap-1.5';
-            if(bInc) bInc.className = !isExp ? 'py-2.5 rounded-2xl text-xs font-black transition-all bg-white text-emerald-600 shadow-sm flex items-center justify-center gap-1.5' : 'py-2.5 rounded-2xl text-xs font-black transition-all text-slate-500 flex items-center justify-center gap-1.5';
-            const bgAcc = document.getElementById('input-bg-accent');
-            if(bgAcc) bgAcc.className = `absolute top-0 right-0 w-16 h-16 ${isExp ? 'bg-slate-100' : 'bg-emerald-50'} rounded-full -mr-8 -mt-8 transition-all duration-700`;
-            renderAddForm();
+        function deleteItem(type, id) {
+            openConfirm('移除分類', '確定要刪除此自定義分類嗎？', () => {
+                const lists = { 'cat': 'categories', 'inc': 'incomeCategories', 'pay': 'paymentMethods' };
+                state[lists[type]] = state[lists[type]].filter(i => i.id !== id);
+                saveData();
+                renderSettings();
+                renderAll();
+            });
         }
 
-        function setInputCurrency(c) {
-            state.inputCurrency = c;
-            const bj = document.getElementById('btn-jpy');
-            const bt = document.getElementById('btn-twd');
-            if(bj) bj.className = `currency-btn px-3 py-1.5 rounded-lg text-xs font-black transition-all ${c === 'JPY' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`;
-            if(bt) bt.className = `currency-btn px-3 py-1.5 rounded-lg text-xs font-black transition-all ${c === 'TWD' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`;
-            safeUpdate('input-label', `金額紀錄 (${c})`);
-            safeUpdate('currency-symbol', c === 'JPY' ? '¥' : '$');
-            renderConversionHint();
+        function confirmResetApp() {
+            openConfirm('清除所有資料', '警告：此操作將刪除您所有的記帳紀錄與設定！', () => {
+                localStorage.removeItem('jp_v17_data');
+                window.location.reload();
+            });
         }
-
-        function renderConversionHint() {
-            const val = parseFloat(document.getElementById('input-amount')?.value || 0);
-            const hintEl = document.getElementById('conversion-hint');
-            if (!hintEl) return;
-            if (val > 0) {
-                const target = state.inputCurrency === 'JPY' ? `NT$ ${Math.round(val * state.exchangeRate)}` : `¥ ${Math.round(val / state.exchangeRate)}`;
-                hintEl.innerHTML = `<i data-lucide="alert-circle" size="10"></i> 約 ${target}`;
-                hintEl.classList.remove('hidden');
-                lucide.createIcons();
-            } else hintEl.classList.add('hidden');
-        }
-
-        function changeDashboardMonth(val) { state.dashboardMonth = val; saveData(); renderDashboard(); updateChart(); }
-        function changeHistoryDate(type, val) { if (type === 'day') state.historyDay = val; if (type === 'month') state.historyMonth = val; if (type === 'year') state.historyYear = val; saveData(); renderHistory(); }
-        function setFilter(f) { state.historyFilter = f; document.querySelectorAll('#history-filter button').forEach(b => b.className = `px-3 py-1.5 rounded-lg text-xs font-black uppercase transition-all ${b.id.includes(f) ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`); renderHistory(); }
-        function setSelection(type, id) { if (type === 'cat') { if (state.inputType === 'expense') state.selectedCategory = id; else state.selectedIncomeCategory = id; } else state.selectedPayment = id; renderAddForm(); }
 
         function saveTransaction(event) {
             event.preventDefault();
-            const amt = parseFloat(document.getElementById('input-amount')?.value || 0);
+            const amt = parseFloat(document.getElementById('input-amount').value || 0);
             if (amt <= 0) return;
             const jpy = state.inputCurrency === 'JPY' ? amt : amt / state.exchangeRate;
             const twd = state.inputCurrency === 'TWD' ? amt : amt * state.exchangeRate;
             const cat = state.inputType === 'expense' ? state.selectedCategory : state.selectedIncomeCategory;
-            state.transactions.unshift({ id: Date.now().toString(), type: state.inputType, amount: Math.round(jpy), twd: parseFloat(twd.toFixed(1)), category: cat, payment: state.selectedPayment, date: document.getElementById('input-date').value, note: document.getElementById('input-note').value });
+            state.transactions.unshift({
+                id: Date.now().toString(),
+                type: state.inputType,
+                amount: Math.round(jpy),
+                twd: parseFloat(twd.toFixed(1)),
+                category: cat,
+                payment: state.selectedPayment,
+                date: document.getElementById('input-date').value,
+                note: document.getElementById('input-note').value
+            });
             saveData();
-            const btn = document.getElementById('save-btn');
-            if(btn) {
-                const oldText = btn.innerHTML;
-                btn.classList.add('bg-emerald-600');
-                btn.innerText = '儲存成功！';
-                setTimeout(() => { switchTab('history'); btn.classList.remove('bg-emerald-600'); btn.innerHTML = oldText; document.getElementById('input-amount').value = ''; document.getElementById('input-note').value = ''; lucide.createIcons(); }, 600);
-            }
+            switchTab('history');
+            document.getElementById('input-amount').value = '';
+            document.getElementById('input-note').value = '';
         }
-
-        function deleteRecord(id) { if (confirm('刪除交易？')) { state.transactions = state.transactions.filter(t => t.id !== id); saveData(); renderAll(); updateChart(); } }
 
         function saveInitialCost(e) {
             e.preventDefault();
             const n = document.getElementById('init-input-name').value;
             const b = parseFloat(document.getElementById('init-input-budget').value) || 0;
             const a = parseFloat(document.getElementById('init-input-actual').value) || 0;
-            const note = document.getElementById('init-input-note').value;
             if (!n) return;
-            state.initialCosts.unshift({ id: Date.now().toString(), name: n, budget: b, actual: a, note: note });
+            state.initialCosts.unshift({ id: Date.now().toString(), name: n, budget: b, actual: a, note: document.getElementById('init-input-note').value });
             saveData();
             document.getElementById('init-input-name').value = '';
             document.getElementById('init-input-budget').value = '';
             document.getElementById('init-input-actual').value = '';
-            document.getElementById('init-input-note').value = '';
             renderInitialCosts();
             renderDashboard();
         }
 
-        function deleteInitial(id) { if (confirm('移除項目？')) { state.initialCosts = state.initialCosts.filter(i => i.id !== id); saveData(); renderInitialCosts(); renderDashboard(); } }
-        function toggleSettings(show) { const el = document.getElementById('modal-settings'); if (el) el.classList.toggle('hidden', !show); if (show) renderSettings(); }
+        // --- UI Utils ---
+        function switchTab(tabId) {
+            state.activeTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId));
+            renderAll();
+            if (tabId === 'dashboard') setTimeout(updateChart, 100);
+        }
+
+        function setSelection(type, id) {
+            if (type === 'cat') {
+                if (state.inputType === 'expense') state.selectedCategory = id;
+                else state.selectedIncomeCategory = id;
+            } else state.selectedPayment = id;
+            renderAddForm();
+        }
+
+        function setInputType(type) {
+            state.inputType = type;
+            renderAddForm();
+        }
+
+        function setInputCurrency(c) {
+            state.inputCurrency = c;
+            safeUpdate('input-label', `金額紀錄 (${c})`);
+            safeUpdate('currency-symbol', c === 'JPY' ? '¥' : '$');
+            renderAddForm();
+        }
+
+        function toggleSettings(show) {
+            document.getElementById('modal-settings').classList.toggle('hidden', !show);
+            if (show) renderSettings();
+        }
 
         function renderSettings() {
             const renderList = (id, list, type) => {
                 const el = document.getElementById(id);
-                if (el) el.innerHTML = list.map(item => `<div class="bg-slate-50 p-2.5 px-4 rounded-xl flex justify-between items-center mb-1.5 shadow-inner border border-slate-100"><div class="flex items-center gap-2"><i data-lucide="${ICON_OPTIONS[item.icon].icon}" size="12" style="color: ${ICON_OPTIONS[item.icon].color}"></i><span class="text-sm font-black text-slate-700">${item.name}</span></div><div class="flex items-center gap-2"><button onclick="openEditModal('${type}', '${item.id}')"><i data-lucide="edit-3" size="14" class="text-slate-400"></i></button><button onclick="deleteItem('${type}', '${item.id}')"><i data-lucide="trash-2" size="14" class="text-slate-400"></i></button></div></div>`).join('');
+                el.innerHTML = list.map(item => `
+                    <div class="bg-slate-50 p-2.5 px-4 rounded-xl flex justify-between items-center mb-1.5 shadow-inner border border-slate-100">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="${ICON_OPTIONS[item.icon].icon}" size="12" style="color: ${ICON_OPTIONS[item.icon].color}"></i>
+                            <span class="text-sm font-black text-slate-700">${item.name}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="openEditModal('${type}', '${item.id}')"><i data-lucide="edit-3" size="14" class="text-slate-400"></i></button>
+                            <button onclick="deleteItem('${type}', '${item.id}')"><i data-lucide="trash-2" size="14" class="text-slate-400"></i></button>
+                        </div>
+                    </div>`).join('');
             };
             renderList('settings-cat-list', state.categories, 'cat');
             renderList('settings-inc-list', state.incomeCategories, 'inc');
@@ -997,57 +888,25 @@
             lucide.createIcons();
         }
 
-        function openEditModal(type, id) {
-            const lists = { 'cat': state.categories, 'inc': state.incomeCategories, 'pay': state.paymentMethods };
-            const item = lists[type].find(i => i.id === id); if (!item) return;
-            state.editingItem = { type, id, tempIcon: item.icon };
-            const editName = document.getElementById('edit-name');
-            if (editName) editName.value = item.name;
-            const iconGrid = document.getElementById('edit-icon-grid');
-            if (iconGrid) iconGrid.innerHTML = Object.keys(ICON_OPTIONS).map(k => `<button type="button" onclick="setEditIcon('${k}')" class="p-2.5 rounded-xl transition-all ${state.editingItem.tempIcon===k?'bg-blue-50 ring-2 ring-blue-500':'opacity-50 grayscale hover:opacity-100'}"><i data-lucide="${ICON_OPTIONS[k].icon}" style="color: ${ICON_OPTIONS[k].color}" size="20"></i></button>`).join('');
-            const modal = document.getElementById('modal-edit');
-            if (modal) modal.classList.remove('hidden');
-            lucide.createIcons();
+        // --- Helper ---
+        function safeUpdate(id, text) {
+            const el = document.getElementById(id);
+            if (el) el.innerText = text;
         }
-        function setEditIcon(k) { state.editingItem.tempIcon = k; openEditModal(state.editingItem.type, state.editingItem.id); }
-        function saveItemEdit() {
-            const { type, id, tempIcon } = state.editingItem;
-            const editName = document.getElementById('edit-name');
-            const n = editName ? editName.value.trim() : ""; if (!n) return;
-            const lists = { 'cat': 'categories', 'inc': 'incomeCategories', 'pay': 'paymentMethods' };
-            state[lists[type]] = state[lists[type]].map(i => i.id === id ? { ...i, name: n, icon: tempIcon } : i);
-            saveData(); closeEditModal(); renderSettings(); renderAll();
+        function hexToRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
         }
-        function closeEditModal() { const modal = document.getElementById('modal-edit'); if (modal) modal.classList.add('hidden'); }
-        function addItem(type) {
-            const id = type + Date.now();
-            const lists = { 'cat': 'categories', 'inc': 'incomeCategories', 'pay': 'paymentMethods' };
-            state[lists[type]].push({ id, name: '新項目', icon: 'ShoppingBag' });
-            saveData(); openEditModal(type, id);
-        }
-        function deleteItem(type, id) { if (confirm('移除分類？')) { const lists = { 'cat': 'categories', 'inc': 'incomeCategories', 'pay': 'paymentMethods' }; state[lists[type]] = state[lists[type]].filter(i => i.id !== id); saveData(); renderSettings(); renderAll(); } }
-        function resetApp() { if (confirm('重置所有資料？')) { localStorage.removeItem('jp_v17_data'); window.location.reload(); } }
+        function changeDashboardMonth(v) { state.dashboardMonth = v; saveData(); renderDashboard(); updateChart(); }
+        function changeHistoryDate(t, v) { if(t==='day') state.historyDay=v; if(t==='month') state.historyMonth=v; saveData(); renderHistory(); }
+        function setFilter(f) { state.historyFilter = f; renderHistory(); }
 
-        function init() {
+        window.onload = () => {
             loadData();
+            document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('dash-month-input').value = state.dashboardMonth;
             switchTab(state.activeTab);
-            setInputCurrency(state.inputCurrency);
-            setInputType(state.inputType);
-            const dateInput = document.getElementById('input-date');
-            if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
-            const dashMonthInput = document.getElementById('dash-month-input');
-            if (dashMonthInput) dashMonthInput.value = state.dashboardMonth;
-            const rateInput = document.getElementById('set-rate');
-            if (rateInput) {
-                rateInput.value = state.exchangeRate;
-                rateInput.oninput = (e) => { state.exchangeRate = parseFloat(e.target.value) || 0; saveData(); renderDashboard(); };
-            }
-            const amountInput = document.getElementById('input-amount');
-            if (amountInput) amountInput.oninput = renderConversionHint;
-            renderAll();
-        }
-
-        window.addEventListener('DOMContentLoaded', init);
+        };
     </script>
 </body>
 </html>
